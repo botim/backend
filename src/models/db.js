@@ -1,5 +1,5 @@
 var pgp = require('pg-promise')(/*options*/);
-const { DB_URL } = process.env;
+const { DATABASE_URL } = process.env;
 
-exports.db = pgp(DB_URL);
+exports.db = pgp(DATABASE_URL);
 

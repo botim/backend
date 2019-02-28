@@ -8,7 +8,7 @@ Deployed on Heroku
 
 ### DB
 
-Using postgres. Define local variable named DB_URL of the form postgres://user:pass@localhost:5432/bots_db
+Using postgres. Define local variable named DATABASE_URL of the form postgres://user:pass@localhost:5432/bots_db
 
 Install locally by running:
 
