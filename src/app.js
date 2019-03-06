@@ -13,7 +13,9 @@ app.use(helmet());
 app.use(morgan('combined'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(expressSession({ secret: process.env.SESSION_SECRET, resave: true, saveUninitialized: true }));
+app.use(
+  expressSession({ secret: process.env.SESSION_SECRET, resave: true, saveUninitialized: true })
+);
 
 app.use(auth);
 

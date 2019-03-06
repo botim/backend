@@ -42,12 +42,13 @@ passport.deserializeUser(function(obj, cb) {
 
 routes.get('/auth/twitter', passport.authenticate('twitter'));
 
-routes.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), function(
-  req,
-  res
-) {
-  // successful authentication, redirect home.
-  res.redirect('/');
-});
+routes.get(
+  '/auth/twitter/callback',
+  passport.authenticate('twitter', { failureRedirect: '/login' }),
+  function(req, res) {
+    // successful authentication, redirect home.
+    res.redirect('/');
+  }
+);
 
 export { routes as auth };
