@@ -10,7 +10,7 @@ Deployed on Heroku
 
 ### DB
 
-Using postgres. Define local variable named DATABASE_URL of the form postgres://user:pass@localhost:5432/bots_db
+Using postgres. Define local variable named DATABASE_URL of the form `postgres://user:pass@localhost:5432/bots_db`
 
 Install locally by running:
 
@@ -27,6 +27,12 @@ $ psql postgres -U bots
 > CREATE TABLE reporters (ID SERIAL PRIMARY KEY, reporterKey VARCHAR(30));
 
 ```
+### Run Example
+
+enter in command line:
+* `npm i`
+* `DATABASE_URL='postgres://user:pass@localhost:5432/bots_db'`
+* `npm run start`
 
 ### API
 
@@ -44,6 +50,6 @@ And the reporters API key checks against `reporters` table.
 
 environment variables:
 
-* `DATABASE_URL` DB URI.
-* `PORT` HTTP Port
-* `REQUESTS_LIMIT` Maximum requests in 10 minutes window per IP.
+* `DATABASE_URL` DB URI. 
+* `PORT` HTTP Port. (default 8080).
+* `REQUESTS_LIMIT` Maximum requests in 10 minutes window per IP. (default 1000).

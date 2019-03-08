@@ -15,7 +15,8 @@
   "scripts": {
     "jscopy": "copyfiles -u 1 src/**/*.js dist",
     "prepare": "tsoa routes && tsoa swagger && tsc && npm run jscopy",
-    "build": "npm run prepare"
+    "build": "npm run prepare",
+    "start": "npm run build && node dist/index.js"
   },
   "keywords": [
     "express",
