@@ -8,7 +8,7 @@ export declare type DetectionStatus = 'REPORTED' | 'IN_PROCESS' | 'BOT' | 'NOT_B
  * Each schema that needs to authenticate the client before handling it should extend it.
  */
 export interface AuthedRequest {
-	reporterKey: string;
+	authKey: string;
 }
 
 export interface Report extends AuthedRequest {

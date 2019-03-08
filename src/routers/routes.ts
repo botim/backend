@@ -17,7 +17,7 @@ const models: TsoaRoute.Models = {
   },
   "Report": {
     "properties": {
-      "reporterKey": { "dataType": "string", "required": true },
+      "authKey": { "dataType": "string", "required": true },
       "platform": { "dataType": "enum", "enums": ["TWITTER", "FACEBOOK", "INSTAGRAM"], "required": true },
       "botReason": { "dataType": "enum", "enums": ["BOT", "VIOLENCE", "FAKE"], "required": true },
       "userId": { "dataType": "string", "required": true },

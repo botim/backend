@@ -21,16 +21,16 @@ export const expressAuthentication = async (request: express.Request, scopes: st
 
 	/** Make sure that there is a body, and the body contains the API key. */
 	const authedRequest: AuthedRequest = request.body;
-	if (authedRequest && authedRequest.reporterKey) {
+	if (authedRequest && authedRequest.authKey) {
 		// If API key valid in cache, it's enough.
-		if (reportesCache.get(authedRequest.reporterKey)) {
+		if (reportesCache.get(authedRequest.authKey)) {
 			return;
 		}
 
 		/** Check API key of the reporter. */
-		if (await checkReporterKey(authedRequest.reporterKey)) {
+		if (await checkReporterKey(authedRequest.authKey)) {
 			/** Save it in the cache. */
-			reportesCache.set(authedRequest.reporterKey, true);
+			reportesCache.set(authedRequest.authKey, true);
 			return;
 		}
 	}

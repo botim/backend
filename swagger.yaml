@@ -35,7 +35,7 @@ definitions:
             $ref: '#/definitions/ConfirmedBot'
     Report:
         properties:
-            reporterKey:
+            authKey:
                 type: string
             platform:
                 type: string
@@ -54,7 +54,7 @@ definitions:
             description:
                 type: string
         required:
-            - reporterKey
+            - authKey
             - platform
             - botReason
             - userId
@@ -92,6 +92,15 @@ paths:
                     type: array
                     items:
                         type: string
+                -
+                    in: query
+                    name: platfrom
+                    required: true
+                    type: string
+                    enum:
+                        - TWITTER
+                        - FACEBOOK
+                        - INSTAGRAM
     /bots/suspected:
         post:
             operationId: ReportSuspected
