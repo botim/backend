@@ -6,11 +6,11 @@
         "basePath": "/",
         "tags": [
             {
-                "name": "Botim",
+                "name": "Bots",
                 "description": "Botim on you, israel."
             }
         ],
-        "name": "Botim - extention backend",
+        "name": "Botim - extension backend",
         "description": "",
         "securityDefinitions": {
             "reporterAuth": {

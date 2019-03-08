@@ -61,13 +61,13 @@ definitions:
             - description
         type: object
 info:
-    title: 'Botim - extention backend'
+    title: 'Botim - extension backend'
     version: 1.0.0
     description: 'Using latest JavaScript features on the server'
     license:
         name: MIT
 paths:
-    /botim/confirmed:
+    /bots/confirmed:
         get:
             operationId: GetConfirmed
             produces:
@@ -79,9 +79,9 @@ paths:
                         $ref: '#/definitions/Bots'
                 '501':
                     description: 'Server error'
-            description: 'Get all confirmed botim.'
+            description: 'Get all confirmed bots.'
             tags:
-                - Botim
+                - Bots
             security: []
             parameters:
                 -
@@ -92,7 +92,7 @@ paths:
                     type: array
                     items:
                         type: string
-    /botim/suspected:
+    /bots/suspected:
         post:
             operationId: ReportSuspected
             produces:
@@ -104,7 +104,7 @@ paths:
                     description: 'Server error'
             description: 'Report a bot.'
             tags:
-                - Botim
+                - Bots
             security:
                 -
                     reporterAuth: []
@@ -126,7 +126,7 @@ securityDefinitions:
 host: 'localhost:8080'
 tags:
     -
-        name: Botim
+        name: Bots
         description: 'Botim on you, israel.'
 schemes:
     - http

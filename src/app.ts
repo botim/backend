@@ -4,7 +4,7 @@ import * as RateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import * as path from 'path';
 import { RegisterRoutes } from './routers/routes';
-import { sanitizeExpressMiddleware } from 'generic-json-sanitizer';
+import { sanitizeExpressMiddleware, sanitizeJsonSync } from 'generic-json-sanitizer';
 
 // controllers need to be referenced in order to get crawled by the TSOA generator
 import './controllers/botim-controller';
@@ -88,13 +88,18 @@ class App {
      * to avoid stored XSS issues.
      */
 	private sanitizeData(): void {
-
-		// TODO: sanitize query.
+		// sanitize body.
 		this.express.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
 			sanitizeExpressMiddleware(req, res, next, {
 				allowedAttributes: {},
 				allowedTags: []
 			});
+		});
+
+		// sanitize query.
+		this.express.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+			sanitizeJsonSync(req.query);
+			next();
 		});
 	}
 

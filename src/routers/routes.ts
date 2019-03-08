@@ -28,7 +28,7 @@ const models: TsoaRoute.Models = {
 const validationService = new ValidationService(models);
 
 export function RegisterRoutes(app: express.Express) {
-  app.get('/botim/confirmed',
+  app.get('/bots/confirmed',
     function(request: any, response: any, next: any) {
       const args = {
         userIds: { "in": "query", "name": "userIds", "required": true, "dataType": "array", "array": { "dataType": "string" } },
@@ -48,7 +48,7 @@ export function RegisterRoutes(app: express.Express) {
       const promise = controller.getConfirmed.apply(controller, validatedArgs as any);
       promiseHandler(controller, promise, response, next);
     });
-  app.post('/botim/suspected',
+  app.post('/bots/suspected',
     authenticateMiddleware([{ "reporterAuth": [] }]),
     function(request: any, response: any, next: any) {
       const args = {

@@ -1,6 +1,6 @@
 import * as express from 'express';
-import { getBotIds } from '../data/confirmed';
-import { createUserIds } from '../data/suspected';
+import { getBotsByIds } from '../data/confirmed';
+import { createNewReport } from '../data/suspected';
 import * as NodeCache from 'node-cache';
 import {
 	Body,
@@ -26,47 +26,53 @@ const botsCache = new NodeCache({
 	checkperiod: 60 * 30 // Clear cache every 30 minutes.
 });
 
-@Tags('Botim')
-@Route('botim')
+@Tags('Bots')
+@Route('bots')
 export class BotimController extends Controller {
 	/**
-     * Get all confirmed botim.
+     * Get all confirmed bots.
      */
 	@Response(501, 'Server error')
 	@Get('confirmed')
 	public async getConfirmed(@Query() userIds: string[]): Promise<Bots> {
-		// try fill bots from cache only.
+		/** Try to retrieve bots from the cache before reading data from the DB. */
+
 		const cachedBots: Bots = {};
 		let failToRetriveFromCache = false;
+		/** Iterate on userIds to look for cached data about him. */
 		for (const userId of userIds) {
 			const cachedBot: ConfirmedBot | string = botsCache.get(userId);
-			// If not all in cache, abort reread all from db.
+			/** If not *all* users cached, abort and retrieve all from db. */
 			if (!cachedBot) {
 				failToRetriveFromCache = true;
 				break;
 			}
 
-			if (cachedBot !== 'empty') {
+			/** 
+			 * If the user marked as 'NOT_EXIST' ignore it.
+			 */
+			if (cachedBot !== 'NOT_EXIST') {
 				cachedBots[userId] = cachedBot as ConfirmedBot;
 			}
 		}
 
+		/** If all users cached, return the bots from the cache. */
 		if (!failToRetriveFromCache) {
 			return cachedBots;
 		}
 
-		// If cache not hold all bots yet, update cache for next time ;)
-		const bots = await getBotIds(userIds);
+		/** If cache not hold all bots yet, update cache for next time ;) */
+		const bots = await getBotsByIds(userIds);
 
-		// Load cache.
+		/** Update cache. */
 		for (const [ userId, confirmedBot ] of Object.entries(bots)) {
 			botsCache.set(userId, confirmedBot);
 		}
 
-		// Mark all users that not in bots as empty in cache for next time.
+		/** Mark all users that not in bots as 'NOT_EXIST' in the cache for next time. */
 		for (const userId of userIds) {
 			if (!(userId in bots)) {
-				botsCache.set(userId, 'empty');
+				botsCache.set(userId, 'NOT_EXIST');
 			}
 		}
 
@@ -80,6 +86,6 @@ export class BotimController extends Controller {
 	@Security('reporterAuth')
 	@Post('suspected')
 	public async reportSuspected(@Body() report: Report): Promise<void> {
-		await createUserIds(report);
+		await createNewReport(report);
 	}
 }

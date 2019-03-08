@@ -5,5 +5,5 @@ import app from './app';
 const httpPort = process.env.PORT || 8080;
 
 const server: any = http.createServer(app).listen(httpPort, () => {
-    console.info(`HTTP listen on port ${httpPort}`);
+	console.info(`HTTP listen on port ${httpPort}`);
 });

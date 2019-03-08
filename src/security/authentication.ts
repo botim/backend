@@ -1,38 +1,35 @@
 import * as express from 'express';
 import * as NodeCache from 'node-cache';
-import { Application, NextFunction, Request, Response } from 'express';
 import { AuthedRequest } from '../models/symbols';
-import { expressAuthentication as localExpressAuthentication } from './authentication';
-import { getReporter } from '../data/reporters';
+import { checkReporterKey } from '../data/reporters';
 
 const reportesCache = new NodeCache({
-	stdTTL: 60 * 60 * 2, // Each 2 hours reread key from db.
-	checkperiod: 60 * 30 // Clear cache every 30 minutes.
+	stdTTL: 60 * 60 * 2, // Every 2 hours reread key from DB.
+	checkperiod: 60 * 30 // Clear old cache every 30 minutes.
 });
 
 /**
  * Cert Authentication middelwhere API.
- * the auth token should be the value of 'session' cookie.
- * @param securityName Used as auth scope beacuse of poor scopes swaggger support in apiKey auth.
+ * the key should be the 'reporterKey' property in the body.
  */
 export const expressAuthentication = async (request: express.Request, scopes: string[]) => {
-	// If the routing security sent wrong security scope.
+	/** If the routing security sent wrong security scope. */
 	if (!scopes || scopes.length < 1) {
 		console.error('invalid or empty security scope');
 		throw new Error('scope check fail');
 	}
 
-	// Make sure that there is body, and the body containce api key.
+	/** Make sure that there is a body, and the body contains the API key. */
 	const authedRequest: AuthedRequest = request.body;
 	if (authedRequest && authedRequest.reporterKey) {
-		// Case API ket valid in cache, it's enough.
+		// If API key valid in cache, it's enough.
 		if (reportesCache.get(authedRequest.reporterKey)) {
 			return;
 		}
 
-		// Check API of reporter
-		if (await getReporter(authedRequest.reporterKey)) {
-			// Save it in cache.
+		/** Check API key of the reporter. */
+		if (await checkReporterKey(authedRequest.reporterKey)) {
+			/** Save it in the cache. */
 			reportesCache.set(authedRequest.reporterKey, true);
 			return;
 		}
