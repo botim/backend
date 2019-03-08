@@ -21,7 +21,7 @@ $ psql postgres
 
 $ psql postgres -U bots
 > CREATE DATABASE bots_db;
-> GRANT ALL PRIVILEGES ON DATABASE bots_db TO bots; postgres=> \list
+> GRANT ALL PRIVILEGES ON DATABASE bots_db TO bots;
 > CREATE TABLE suspectedBots (ID SERIAL PRIMARY KEY, userId VARCHAR(30), platform VARCHAR(30), botReason VARCHAR(30), description VARCHAR(200), reporterKey VARCHAR(30));
 > CREATE TABLE confirmedBots (ID SERIAL PRIMARY KEY, userId VARCHAR(30), platform VARCHAR(30), detectionStatus VARCHAR(30), botReason VARCHAR(30));
 > CREATE TABLE reporters (ID SERIAL PRIMARY KEY, reporterKey VARCHAR(30));
