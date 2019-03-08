@@ -1,6 +1,8 @@
 # Bots backend
 
-Based on https://github.com/vmasto/express-babel: Express.js with Babel Boilerplate
+Based on https://github.com/vmasto/express-babel: Express.js with Babel Boilerplate.
+
+Using TSOA Routing https://github.com/lukeautry/tsoa.
 
 ### Deployment
 
