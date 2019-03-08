@@ -1,23 +1,27 @@
 // @ts-ignore
 /* tslint:disable */
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
-import { BotimController } from './../controllers/botimController';
+import { BotimController } from './../controllers/botim-controller';
 import { expressAuthentication } from './../security/authentication';
 import * as express from 'express';
 const models: TsoaRoute.Models = {
-  "BotMeta": {
+  "ConfirmedBot": {
     "properties": {
       "detectionStatus": { "dataType": "enum", "enums": ["REPORTED", "IN_PROCESS", "BOT", "NOT_BOT"], "required": true },
-      "platfrom": { "dataType": "enum", "enums": ["TWITTER", "FACEBOOK", "INSTAGRAM"], "required": true },
-      "postId": { "dataType": "string", "required": true },
       "botReason": { "dataType": "enum", "enums": ["BOT", "VIOLENCE", "FAKE"], "required": true },
+      "platform": { "dataType": "enum", "enums": ["TWITTER", "FACEBOOK", "INSTAGRAM"], "required": true },
     },
+  },
+  "Bots": {
+    "additionalProperties": { "ref": "ConfirmedBot" },
   },
   "Report": {
     "properties": {
+      "reporterKey": { "dataType": "string", "required": true },
       "platform": { "dataType": "enum", "enums": ["TWITTER", "FACEBOOK", "INSTAGRAM"], "required": true },
       "botReason": { "dataType": "enum", "enums": ["BOT", "VIOLENCE", "FAKE"], "required": true },
       "userId": { "dataType": "string", "required": true },
+      "description": { "dataType": "string", "required": true },
     },
   },
 };
@@ -27,15 +31,14 @@ export function RegisterRoutes(app: express.Express) {
   app.get('/botim/confirmed',
     function(request: any, response: any, next: any) {
       const args = {
+        userIds: { "in": "query", "name": "userIds", "required": true, "dataType": "array", "array": { "dataType": "string" } },
       };
 
       let validatedArgs: any[] = [];
       try {
         validatedArgs = getValidatedArgs(args, request);
       } catch (err) {
-        response.status(422).send({
-          responseCode: 1422,
-        });
+        response.status(422).send();
         return;
       }
 
@@ -46,6 +49,7 @@ export function RegisterRoutes(app: express.Express) {
       promiseHandler(controller, promise, response, next);
     });
   app.post('/botim/suspected',
+    authenticateMiddleware([{ "reporterAuth": [] }]),
     function(request: any, response: any, next: any) {
       const args = {
         report: { "in": "body", "name": "report", "required": true, "ref": "Report" },
@@ -55,9 +59,7 @@ export function RegisterRoutes(app: express.Express) {
       try {
         validatedArgs = getValidatedArgs(args, request);
       } catch (err) {
-        response.status(422).send({
-          responseCode: 1422,
-        });
+        response.status(422).send();
         return;
       }
 
@@ -68,6 +70,31 @@ export function RegisterRoutes(app: express.Express) {
       promiseHandler(controller, promise, response, next);
     });
 
+  function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
+    return (request: any, _response: any, next: any) => {
+
+      const succeed = function(user: any) {
+        request['user'] = user;
+        next();
+      }
+
+      const fail = async function(error: any) {
+        _response.status(401).send();
+      }
+
+      const scopes: string[] = [];
+      try {
+        for (const scop of security) {
+          scopes.push(Object.keys(scop)[0]);
+        }
+      } catch (error) {
+      }
+
+      expressAuthentication(request, scopes)
+        .then(succeed)
+        .catch(fail)
+    }
+  }
 
   function isController(object: any): object is Controller {
     return 'getHeaders' in object && 'getStatus' in object && 'setStatus' in object;
@@ -93,26 +120,7 @@ export function RegisterRoutes(app: express.Express) {
         }
       })
       .catch(async (error: any) => {
-        /**
-         * If error is from TSOA sent it back to client (it's part of API)
-         * Else throw it back.
-         */
-        try {
-          const cleanError = {
-            responseCode: error.responseCode,
-            message: error.message
-          };
-
-          if (typeof cleanError.responseCode !== 'number') {
-            throw new Error('invalid error schema');
-          }
-          response.status(500).send(cleanError);
-        } catch (error) {
-          response.status(500).send({
-            responseCode: 1500,
-            message: 'unknown error',
-          });
-        }
+        response.status(500).send();
       });
   }
 

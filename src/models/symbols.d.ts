@@ -4,16 +4,23 @@ export declare type BotReason = 'BOT' | 'VIOLENCE' | 'FAKE';
 
 export declare type DetectionStatus = 'REPORTED' | 'IN_PROCESS' | 'BOT' | 'NOT_BOT';
 
-export declare interface Report {
-    platform : Platform;
-    botReason : BotReason;
-    userId: string;
+export interface AuthedRequest {
+	reporterKey: string;
 }
 
-export declare interface BotMeta {
-    detectionStatus : DetectionStatus;
-    platfrom : Platform;
-    /** id of post, tweet, etc. */
-    postId : string;
-    botReason : BotReason;
+export interface Report extends AuthedRequest {
+	platform: Platform;
+	botReason: BotReason;
+	userId: string;
+	description: string;
+}
+
+export interface ConfirmedBot {
+	detectionStatus: DetectionStatus;
+	botReason: BotReason;
+	platform: Platform;
+}
+
+export interface Bots {
+	[key: string]: ConfirmedBot;
 }

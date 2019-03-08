@@ -54,9 +54,7 @@ export function RegisterRoutes(app: express.Express) {
             try {
                 validatedArgs = getValidatedArgs(args, request);
             } catch (err) {
-                response.status(422).send({
-                        responseCode: 1422,
-                    });
+                response.status(422).send();
                 return;
             }
 
@@ -86,9 +84,7 @@ export function RegisterRoutes(app: express.Express) {
             }
 
             const fail = async function(error: any) {
-                _response.status(401).send({
-                    responseCode: 1401,
-                });
+                _response.status(401).send();
             }
 
             const scopes : string[] = [];
@@ -130,26 +126,7 @@ export function RegisterRoutes(app: express.Express) {
                 }
             })
             .catch(async (error: any) => {
-                /**
-                 * If error is from TSOA sent it back to client (it's part of API)
-                 * Else throw it back.
-                 */
-                try {
-                    const cleanError = {
-                        responseCode: error.responseCode,
-                        message: error.message
-                    };
-
-                    if(typeof cleanError.responseCode !== 'number'){
-                        throw new Error('invalid error schema');
-                    }
-                    response.status(500).send(cleanError);
-                } catch (error) {
-                    response.status(500).send({
-                        responseCode: 1500,
-                        message : 'unknown error',
-                    });
-                }
+                response.status(500).send();
             });
     }
 

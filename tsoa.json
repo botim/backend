@@ -28,7 +28,7 @@
         "basePath": "/",
         "entryFile": "./src/index.ts",
         "routesDir": "./src/routers",
-        "middlewareTemplate": "./src/routers/expressRoutesTemplate.ts.tsoa",
+        "middlewareTemplate": "./src/routers/express-routes-template.ts.tsoa",
         "authenticationModule": "./src/security/authentication.ts"
     }
 }

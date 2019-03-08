@@ -2,7 +2,7 @@ basePath: /
 consumes:
     - application/json
 definitions:
-    BotMeta:
+    ConfirmedBot:
         properties:
             detectionStatus:
                 type: string
@@ -11,29 +11,32 @@ definitions:
                     - IN_PROCESS
                     - BOT
                     - NOT_BOT
-            platfrom:
-                type: string
-                enum:
-                    - TWITTER
-                    - FACEBOOK
-                    - INSTAGRAM
-            postId:
-                type: string
-                description: 'id of post, tweet, etc.'
             botReason:
                 type: string
                 enum:
                     - BOT
                     - VIOLENCE
                     - FAKE
+            platform:
+                type: string
+                enum:
+                    - TWITTER
+                    - FACEBOOK
+                    - INSTAGRAM
         required:
             - detectionStatus
-            - platfrom
-            - postId
             - botReason
+            - platform
         type: object
+    Bots:
+        properties: {}
+        type: object
+        additionalProperties:
+            $ref: '#/definitions/ConfirmedBot'
     Report:
         properties:
+            reporterKey:
+                type: string
             platform:
                 type: string
                 enum:
@@ -48,10 +51,14 @@ definitions:
                     - FAKE
             userId:
                 type: string
+            description:
+                type: string
         required:
+            - reporterKey
             - platform
             - botReason
             - userId
+            - description
         type: object
 info:
     title: 'Botim - extention backend'
@@ -69,16 +76,22 @@ paths:
                 '200':
                     description: Ok
                     schema:
-                        type: array
-                        items:
-                            $ref: '#/definitions/BotMeta'
+                        $ref: '#/definitions/Bots'
                 '501':
                     description: 'Server error'
             description: 'Get all confirmed botim.'
             tags:
                 - Botim
             security: []
-            parameters: []
+            parameters:
+                -
+                    in: query
+                    name: userIds
+                    required: true
+                    collectionFormat: multi
+                    type: array
+                    items:
+                        type: string
     /botim/suspected:
         post:
             operationId: ReportSuspected
@@ -92,7 +105,9 @@ paths:
             description: 'Report a bot.'
             tags:
                 - Botim
-            security: []
+            security:
+                -
+                    reporterAuth: []
             parameters:
                 -
                     in: body

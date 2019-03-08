@@ -20,49 +20,20 @@ $ psql postgres
 $ psql postgres -U bots
 > CREATE DATABASE bots_db;
 > GRANT ALL PRIVILEGES ON DATABASE bots_db TO bots; postgres=> \list
-> CREATE TABLE suspectedBots (ID SERIAL PRIMARY KEY, userId VARCHAR(30), isBot BOOLEAN);
+> CREATE TABLE suspectedBots (ID SERIAL PRIMARY KEY, userId VARCHAR(30), platform VARCHAR(30), botReason VARCHAR(30), description VARCHAR(200), reporterKey VARCHAR(30));
+> CREATE TABLE confirmedBots (ID SERIAL PRIMARY KEY, userId VARCHAR(30), platform VARCHAR(30), detectionStatus VARCHAR(30), botReason VARCHAR(30));
+> CREATE TABLE reporters (ID SERIAL PRIMARY KEY, reporterKey VARCHAR(30));
 
 ```
 
 ### API
 
-save new suspected bot:
-
-```
-Post: http://localhost:8080/suspected?userId=123456
-```
-
-Response:
-```
-{
-  "id": {
-    "id": 1
-  }
-}
-```
-
-Get all confirmed bots:
-```
-Get: http://localhost:8080/confirmed
-```
-
-Response:
-```
-{
-  "botIds": [
-    {
-      "userid": "123456"
-    }
-  ]
-}
-```
+read [swagger.yaml](./swagger.yaml) file.
 
 ### Updating suspected to confirmed bots
 
-Currently all the new suspected are saved as isBot: false.
-The logic to confirm bots is not implemented.
+The reports go to `suspectedBots` table.
 
-To mark a bot, connect to the DB on Heroku, and run:
-```
-Update suspectedbots set isbot=true where id=11;
-```
+The confirmed bots read from `confirmedBots` table.
+
+And the reporters API key checks against `reporters` table.
