@@ -79,6 +79,7 @@ export function RegisterRoutes(app: express.Express) {
       }
 
       const fail = async function(error: any) {
+        console.warn(error);
         _response.status(401).send();
       }
 
@@ -120,6 +121,7 @@ export function RegisterRoutes(app: express.Express) {
         }
       })
       .catch(async (error: any) => {
+        console.warn(error);
         response.status(500).send();
       });
   }
