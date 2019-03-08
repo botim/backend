@@ -27,7 +27,7 @@ const botsCache = new NodeCache({
 });
 
 interface botStamp {
-	platfrom: Platform;
+	platform: Platform;
 	userId: string;
 }
 
@@ -39,14 +39,14 @@ export class BotimController extends Controller {
      */
 	@Response(501, 'Server error')
 	@Get('confirmed')
-	public async getConfirmed(@Query() userIds: string[], @Query() platfrom: Platform): Promise<Bots> {
+	public async getConfirmed(@Query() userIds: string[], @Query() platform: Platform): Promise<Bots> {
 		/** Try to retrieve bots from the cache before reading data from the DB. */
 
 		const cachedBots: Bots = {};
 		let failToRetriveFromCache = false;
 		/** Iterate on userIds to look for cached data about him. */
 		for (const userId of userIds) {
-			const cachedBot: ConfirmedBot | string = botsCache.get(`${platfrom}:${userId}`);
+			const cachedBot: ConfirmedBot | string = botsCache.get(`${platform}:${userId}`);
 			/** If not *all* users cached, abort and retrieve all from db. */
 			if (!cachedBot) {
 				failToRetriveFromCache = true;
@@ -67,17 +67,17 @@ export class BotimController extends Controller {
 		}
 
 		/** If cache not hold all bots yet, update cache for next time ;) */
-		const bots = await getBotsByIds(userIds, platfrom);
+		const bots = await getBotsByIds(userIds, platform);
 
 		/** Update cache. */
 		for (const [ userId, confirmedBot ] of Object.entries(bots)) {
-			botsCache.set(`${platfrom}:${userId}`, confirmedBot);
+			botsCache.set(`${platform}:${userId}`, confirmedBot);
 		}
 
 		/** Mark all users that not in bots as 'NOT_EXIST' in the cache for next time. */
 		for (const userId of userIds) {
 			if (!(userId in bots)) {
-				botsCache.set(`${platfrom}:${userId}`, 'NOT_EXIST');
+				botsCache.set(`${platform}:${userId}`, 'NOT_EXIST');
 			}
 		}
 
