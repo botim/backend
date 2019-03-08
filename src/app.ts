@@ -62,7 +62,7 @@ class App {
 		// Protect from DDOS and access thieves
 		const limiter = new RateLimit({
 			windowMs: 10 * 60 * 1000,
-			max: 1000
+			max: process.env.REQUESTS_LIMIT || 1000
 		});
 
 		//  apply to all  IP requests

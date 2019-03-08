@@ -37,3 +37,11 @@ The reports go to `suspectedBots` table.
 The confirmed bots read from `confirmedBots` table.
 
 And the reporters API key checks against `reporters` table.
+
+### Configuration
+
+environment variables:
+
+* `DATABASE_URL` DB URI.
+* `PORT` HTTP Port
+* `REQUESTS_LIMIT` Maximum requests in 10 minutes window per IP.
