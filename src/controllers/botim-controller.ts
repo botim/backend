@@ -19,12 +19,17 @@ import {
 	SuccessResponse,
 	Tags
 } from 'tsoa';
-import { Bots, Report, ConfirmedBot } from '../models/symbols';
+import { Bots, Report, ConfirmedBot, Platform } from '../models/symbols';
 
 const botsCache = new NodeCache({
 	stdTTL: 60 * 60 * 2, // Each 2 hours reread bots from db.
 	checkperiod: 60 * 30 // Clear cache every 30 minutes.
 });
+
+interface botStamp {
+	platfrom: Platform;
+	userId: string;
+}
 
 @Tags('Bots')
 @Route('bots')
@@ -34,14 +39,14 @@ export class BotimController extends Controller {
      */
 	@Response(501, 'Server error')
 	@Get('confirmed')
-	public async getConfirmed(@Query() userIds: string[]): Promise<Bots> {
+	public async getConfirmed(@Query() userIds: string[], @Query() platfrom: Platform): Promise<Bots> {
 		/** Try to retrieve bots from the cache before reading data from the DB. */
 
 		const cachedBots: Bots = {};
 		let failToRetriveFromCache = false;
 		/** Iterate on userIds to look for cached data about him. */
 		for (const userId of userIds) {
-			const cachedBot: ConfirmedBot | string = botsCache.get(userId);
+			const cachedBot: ConfirmedBot | string = botsCache.get(`${platfrom}:${userId}`);
 			/** If not *all* users cached, abort and retrieve all from db. */
 			if (!cachedBot) {
 				failToRetriveFromCache = true;
@@ -62,17 +67,17 @@ export class BotimController extends Controller {
 		}
 
 		/** If cache not hold all bots yet, update cache for next time ;) */
-		const bots = await getBotsByIds(userIds);
+		const bots = await getBotsByIds(userIds, platfrom);
 
 		/** Update cache. */
 		for (const [ userId, confirmedBot ] of Object.entries(bots)) {
-			botsCache.set(userId, confirmedBot);
+			botsCache.set(`${platfrom}:${userId}`, confirmedBot);
 		}
 
 		/** Mark all users that not in bots as 'NOT_EXIST' in the cache for next time. */
 		for (const userId of userIds) {
 			if (!(userId in bots)) {
-				botsCache.set(userId, 'NOT_EXIST');
+				botsCache.set(`${platfrom}:${userId}`, 'NOT_EXIST');
 			}
 		}
 

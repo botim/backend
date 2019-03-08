@@ -1,9 +1,9 @@
 import { db } from '../core/db';
-import { Bots, Report, DetectionStatus } from '../models/symbols';
+import { Bots, Report, DetectionStatus, Platform } from '../models/symbols';
 
-export const getBotsByIds = async (userIds: string[]): Promise<Bots> => {
+export const getBotsByIds = async (userIds: string[], platform: Platform): Promise<Bots> => {
 	/** Gets all bots that mention in userIds array */
-	const botsArray = await db.any(`SELECT * FROM confirmedBots WHERE userid IN ($1:list)`, [ userIds ]);
+	const botsArray = await db.any(`SELECT * FROM confirmedBots WHERE userid IN ($1:list) AND platform = $2`, [ userIds, platform ]);
 
 	/** Convert array to bots object mapped by userId */
 	const botsMap: Bots = {};

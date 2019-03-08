@@ -32,6 +32,7 @@ export function RegisterRoutes(app: express.Express) {
     function(request: any, response: any, next: any) {
       const args = {
         userIds: { "in": "query", "name": "userIds", "required": true, "dataType": "array", "array": { "dataType": "string" } },
+        platfrom: { "in": "query", "name": "platfrom", "required": true, "dataType": "enum", "enums": ["TWITTER", "FACEBOOK", "INSTAGRAM"] },
       };
 
       let validatedArgs: any[] = [];
