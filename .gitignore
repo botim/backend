@@ -64,3 +64,5 @@ typings/
 # Custom
 .idea
 dist
+routes.ts
+swagger.yaml
