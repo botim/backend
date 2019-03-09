@@ -22,14 +22,9 @@ import {
 import { Bots, Report, Bot, Platform } from '../models/symbols';
 
 const botsCache = new NodeCache({
-	stdTTL: 60 * 60 * 2, // Each 2 hours reread bots from db.
-	checkperiod: 60 * 30 // Clear cache every 30 minutes.
+	stdTTL: parseInt(process.env.CACHE_TTL || '3600'),
+	checkperiod: parseInt(process.env.CACHE_CHECK_PERIOD || '1800')
 });
-
-interface botStamp {
-	platform: Platform;
-	userId: string;
-}
 
 @Tags('Bots')
 @Route('bots')

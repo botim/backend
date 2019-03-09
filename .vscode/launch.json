@@ -12,7 +12,11 @@
       "internalConsoleOptions": "openOnSessionStart",
       "outFiles": [
         "${workspaceFolder}/dist/**/*.js"
-      ]
+      ],
+      "env": {
+        "CACHE_TTL" : "5",
+        "CACHE_CHECK_PERIOD" : "2",
+      }
     },
   ]
 }

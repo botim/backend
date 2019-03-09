@@ -52,3 +52,5 @@ environment variables:
 * `DATABASE_URL` DB URI. 
 * `PORT` HTTP Port. (default 8080).
 * `REQUESTS_LIMIT` Maximum requests in 10 minutes window per IP. (default 1000).
+* `CACHE_TTL` Liveness of a bots cache, in seconds. (default 3600 = houre).
+* `CACHE_CHECK_PERIOD` Interval of cache liveness check. (default 1800 = 30 minutes).
