@@ -10,132 +10,143 @@ import { sanitizeExpressMiddleware, sanitizeJsonSync } from 'generic-json-saniti
 import './controllers/botim-controller';
 
 class App {
-	public express: express.Express;
+  public express: express.Express;
 
-	constructor() {
-		/** Creat the express app */
-		this.express = express();
+  constructor() {
+    /** Creat the express app */
+    this.express = express();
 
-		/** Security is the first thing, right?  */
-		this.vulnerabilityProtection();
+    /** Security is the first thing, right?  */
+    this.vulnerabilityProtection();
 
-		/** Parse the request */
-		this.dataParsing();
+    /** Parse the request */
+    this.dataParsing();
 
-		/** After data parsed, sanitize it. */
-		this.sanitizeData();
+    /** After data parsed, sanitize it. */
+    this.sanitizeData();
 
-		/** Serve static client side */
-		this.serveStatic();
+    /** Serve static client side */
+    this.serveStatic();
 
-		/** Route inner system */
-		this.routes();
+    /** Route inner system */
+    this.routes();
 
-		/** And never sent errors back to client. */
-		this.catchErrors();
-	}
+    /** And never sent errors back to client. */
+    this.catchErrors();
+  }
 
-	/**
-     * Serve static files of front-end.
+  /**
+   * Serve static files of front-end.
+   */
+  private serveStatic() {
+    /** In / path only serve the index.html file */
+    this.express.get('/', (req: express.Request, res: express.Response) =>
+      res.sendFile(path.join(__dirname, '/public/static/index.html'))
+    );
+    /** Get any file in public directory */
+    this.express.use('/static', express.static(path.join(__dirname, '/public/static/')));
+  }
+
+  /**
+   * Route requests to API.
+   */
+  private routes(): void {
+    /** Use generated routers (by TSOA) */
+    RegisterRoutes(this.express);
+  }
+
+  /**
+   * Protect from many vulnerabilities ,by http headers such as HSTS HTTPS redirect etc.
+   */
+  private vulnerabilityProtection(): void {
+    // Protect from DDOS and access thieves
+    const limiter = new RateLimit({
+      windowMs: 10 * 60 * 1000,
+      max: process.env.REQUESTS_LIMIT || 1000
+    });
+
+    //  apply to all  IP requests
+    this.express.use(limiter);
+
+    // Protect from XSS and other malicious attacks
+    this.express.use(helmet());
+    this.express.use(helmet.frameguard({ action: 'deny' }));
+
+    // Allow access from browser extension, otherwise the request fails CORS
+    this.express.use(function(req, res, next) {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+      next();
+    });
+
+    this.express.disable('x-powered-by');
+  }
+
+  /**
+   * Parse request query and body.
+   */
+  private dataParsing(): void {
+    this.express.use(bodyParser.json({ limit: '2mb' })); // for parsing application/json
+    this.express.use(bodyParser.urlencoded({ extended: false }));
+  }
+
+  /**
+   * Sanitize Json schema arrived from client.
+   * to avoid stored XSS issues.
+   */
+  private sanitizeData(): void {
+    // sanitize body.
+    this.express.use(
+      (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        sanitizeExpressMiddleware(req, res, next, {
+          allowedAttributes: {},
+          allowedTags: []
+        });
+      }
+    );
+
+    // sanitize query.
+    this.express.use(
+      (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        sanitizeJsonSync(req.query);
+        next();
+      }
+    );
+  }
+
+  /**
+   * Catch any Node / JS error.
+   */
+  private catchErrors() {
+    // Unknowon routing get 404
+    this.express.use('*', (req, res) => {
+      res.statusCode = 404;
+      res.send();
+    });
+
+    /**
+     * Production error handler, no stacktraces leaked to user.
      */
-	private serveStatic() {
-		/** In / path only serve the index.html file */
-		this.express.get('/', (req: express.Request, res: express.Response) =>
-			res.sendFile(path.join(__dirname, '/public/static/index.html'))
-		);
-		/** Get any file in public directory */
-		this.express.use('/static', express.static(path.join(__dirname, '/public/static/')));
-	}
-
-	/**
-     * Route requests to API.
-     */
-	private routes(): void {
-		/** Use generated routers (by TSOA) */
-		RegisterRoutes(this.express);
-	}
-
-	/**
-     * Protect from many vulnerabilities ,by http headers such as HSTS HTTPS redirect etc.
-     */
-	private vulnerabilityProtection(): void {
-		// Protect from DDOS and access thieves
-		const limiter = new RateLimit({
-			windowMs: 10 * 60 * 1000,
-			max: process.env.REQUESTS_LIMIT || 1000
-		});
-
-		//  apply to all  IP requests
-		this.express.use(limiter);
-
-		// Protect from XSS and other malicious attacks
-		this.express.use(helmet());
-		this.express.use(helmet.frameguard({ action: 'deny' }));
-
-		// Allow access from browser extension, otherwise the request fails CORS
-		this.express.use(function(req, res, next) {
-			res.header("Access-Control-Allow-Origin", "*");
-			res.header("Access-Control-Allow-Headers", "X-Requested-With");
-			next();
-		});
-
-		this.express.disable('x-powered-by');
-	}
-
-	/**
-     * Parse request query and body.
-     */
-	private dataParsing(): void {
-		this.express.use(bodyParser.json({ limit: '2mb' })); // for parsing application/json
-		this.express.use(bodyParser.urlencoded({ extended: false }));
-	}
-
-	/**
-     * Sanitize Json schema arrived from client.
-     * to avoid stored XSS issues.
-     */
-	private sanitizeData(): void {
-		// sanitize body.
-		this.express.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
-			sanitizeExpressMiddleware(req, res, next, {
-				allowedAttributes: {},
-				allowedTags: []
-			});
-		});
-
-		// sanitize query.
-		this.express.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
-			sanitizeJsonSync(req.query);
-			next();
-		});
-	}
-
-	/**
-     * Catch any Node / JS error.
-     */
-	private catchErrors() {
-		// Unknowon routing get 404
-		this.express.use('*', (req, res) => {
-			res.statusCode = 404;
-			res.send();
-		});
-
-		/**
-         * Production error handler, no stacktraces leaked to user.
-         */
-		this.express.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-			try {
-				console.warn(
-					`express route crash,  req: ${req.method} ${req.path} error: ${err.message} body: ${JSON.stringify(
-						req.body
-					)}`
-				);
-			} catch (error) {
-				console.warn(`Ok... even the crash route catcher crashd...`);
-			}
-			res.status(500).send();
-		});
-	}
+    this.express.use(
+      (
+        err: Error,
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+      ) => {
+        try {
+          console.warn(
+            `express route crash,  req: ${req.method} ${req.path} error: ${
+              err.message
+            } body: ${JSON.stringify(req.body)}`
+          );
+        } catch (error) {
+          console.warn(`Ok... even the crash route catcher crashd...`);
+        }
+        res.status(500).send();
+      }
+    );
+  }
 }
 
 export default new App().express;

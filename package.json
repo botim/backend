@@ -16,7 +16,8 @@
     "jscopy": "copyfiles -u 1 src/**/*.js dist",
     "prepare": "tsoa routes && tsoa swagger && tsc && npm run jscopy",
     "build": "npm run prepare",
-    "start": "npm run build && node dist/index.js"
+    "start": "npm run build && node dist/index.js",
+    "format": "prettier --write \"src/**/*.{ts,json}\""
   },
   "keywords": [
     "express",
@@ -53,6 +54,9 @@
     "@types/node": "^10.12.27",
     "@types/node-cache": "^4.1.3",
     "@types/randomstring": "^1.1.6",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.5",
+    "prettier": "^1.16.4",
     "ts-node": "^7.0.1",
     "typescript": "^3.3.3333"
   },

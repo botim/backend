@@ -4,8 +4,8 @@ import { AuthedRequest } from '../models/symbols';
 import { checkReporterKey } from '../data/reporters';
 
 const reportesCache = new NodeCache({
-	stdTTL: 60 * 60 * 2, // Every 2 hours reread key from DB.
-	checkperiod: 60 * 30 // Clear old cache every 30 minutes.
+  stdTTL: 60 * 60 * 2, // Every 2 hours reread key from DB.
+  checkperiod: 60 * 30 // Clear old cache every 30 minutes.
 });
 
 /**
@@ -13,27 +13,27 @@ const reportesCache = new NodeCache({
  * the key should be the 'reporterKey' property in the body.
  */
 export const expressAuthentication = async (request: express.Request, scopes: string[]) => {
-	/** If the routing security sent wrong security scope. */
-	if (!scopes || scopes.length < 1) {
-		console.error('invalid or empty security scope');
-		throw new Error('scope check fail');
-	}
+  /** If the routing security sent wrong security scope. */
+  if (!scopes || scopes.length < 1) {
+    console.error('invalid or empty security scope');
+    throw new Error('scope check fail');
+  }
 
-	/** Make sure that there is a body, and the body contains the API key. */
-	const authedRequest: AuthedRequest = request.body;
-	if (authedRequest && authedRequest.authKey) {
-		// If API key valid in cache, it's enough.
-		if (reportesCache.get(authedRequest.authKey)) {
-			return;
-		}
+  /** Make sure that there is a body, and the body contains the API key. */
+  const authedRequest: AuthedRequest = request.body;
+  if (authedRequest && authedRequest.authKey) {
+    // If API key valid in cache, it's enough.
+    if (reportesCache.get(authedRequest.authKey)) {
+      return;
+    }
 
-		/** Check API key of the reporter. */
-		if (await checkReporterKey(authedRequest.authKey)) {
-			/** Save it in the cache. */
-			reportesCache.set(authedRequest.authKey, true);
-			return;
-		}
-	}
+    /** Check API key of the reporter. */
+    if (await checkReporterKey(authedRequest.authKey)) {
+      /** Save it in the cache. */
+      reportesCache.set(authedRequest.authKey, true);
+      return;
+    }
+  }
 
-	throw new Error('auth fail');
+  throw new Error('auth fail');
 };
