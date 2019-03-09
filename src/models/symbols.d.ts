@@ -22,6 +22,8 @@ export interface Report extends AuthedRequest {
 	description: string;
 	platform: Platform;
 	botReason: BotReason;
+	commentId?: string;
+	replayId?: string;
 }
 
 export interface Bots {

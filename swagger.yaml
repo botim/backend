@@ -53,6 +53,12 @@ definitions:
                     - BOT
                     - VIOLENCE
                     - FAKE
+            commentId:
+                type: string
+                x-nullable: true
+            replayId:
+                type: string
+                x-nullable: true
         required:
             - authKey
             - userId

@@ -22,6 +22,8 @@ const models: TsoaRoute.Models = {
       "description": { "dataType": "string", "required": true },
       "platform": { "dataType": "enum", "enums": ["TWITTER", "FACEBOOK", "INSTAGRAM"], "required": true },
       "botReason": { "dataType": "enum", "enums": ["BOT", "VIOLENCE", "FAKE"], "required": true },
+      "commentId": { "dataType": "string" },
+      "replayId": { "dataType": "string" },
     },
   },
 };
