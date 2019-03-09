@@ -12,8 +12,9 @@ export interface AuthedRequest {
 }
 
 export interface Bot {
+  userId: string;
   detectionStatus: DetectionStatus;
-  botReason: BotReason;
+  reasons: BotReason[];
   platform: Platform;
 }
 
@@ -26,7 +27,6 @@ export interface Report extends AuthedRequest {
   replayId?: string;
 }
 
-export interface Bots {
-  /** Map 'Bot' by userId */
-  [key: string]: Bot;
+export interface BotMap {
+  [key: string]: DetectionStatus;
 }
