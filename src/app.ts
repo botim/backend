@@ -2,7 +2,6 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as RateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
-import * as path from 'path';
 import { RegisterRoutes } from './routers/routes';
 import { sanitizeExpressMiddleware, sanitizeJsonSync } from 'generic-json-sanitizer';
 
@@ -25,26 +24,11 @@ class App {
     /** After data parsed, sanitize it. */
     this.sanitizeData();
 
-    /** Serve static client side */
-    this.serveStatic();
-
     /** Route inner system */
     this.routes();
 
     /** And never sent errors back to client. */
     this.catchErrors();
-  }
-
-  /**
-   * Serve static files of front-end.
-   */
-  private serveStatic() {
-    /** In / path only serve the index.html file */
-    this.express.get('/', (req: express.Request, res: express.Response) =>
-      res.sendFile(path.join(__dirname, '/public/static/index.html'))
-    );
-    /** Get any file in public directory */
-    this.express.use('/static', express.static(path.join(__dirname, '/public/static/')));
   }
 
   /**
