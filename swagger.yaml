@@ -2,7 +2,7 @@ basePath: /
 consumes:
     - application/json
 definitions:
-    ConfirmedBot:
+    Bot:
         properties:
             detectionStatus:
                 type: string
@@ -32,10 +32,14 @@ definitions:
         properties: {}
         type: object
         additionalProperties:
-            $ref: '#/definitions/ConfirmedBot'
+            $ref: '#/definitions/Bot'
     Report:
         properties:
             authKey:
+                type: string
+            userId:
+                type: string
+            description:
                 type: string
             platform:
                 type: string
@@ -49,16 +53,12 @@ definitions:
                     - BOT
                     - VIOLENCE
                     - FAKE
-            userId:
-                type: string
-            description:
-                type: string
         required:
             - authKey
-            - platform
-            - botReason
             - userId
             - description
+            - platform
+            - botReason
         type: object
 info:
     title: 'Botim - extension backend'

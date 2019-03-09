@@ -11,20 +11,20 @@ export interface AuthedRequest {
 	authKey: string;
 }
 
-export interface Report extends AuthedRequest {
-	platform: Platform;
-	botReason: BotReason;
-	userId: string;
-	description: string;
-}
-
-export interface ConfirmedBot {
+export interface Bot {
 	detectionStatus: DetectionStatus;
 	botReason: BotReason;
 	platform: Platform;
 }
 
+export interface Report extends AuthedRequest {
+	userId: string;
+	description: string;
+	platform: Platform;
+	botReason: BotReason;
+}
+
 export interface Bots {
-	/** Map 'ConfirmedBot' by userId */
-	[key: string]: ConfirmedBot;
+	/** Map 'Bot' by userId */
+	[key: string]: Bot;
 }

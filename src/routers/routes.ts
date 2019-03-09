@@ -5,7 +5,7 @@ import { BotimController } from './../controllers/botim-controller';
 import { expressAuthentication } from './../security/authentication';
 import * as express from 'express';
 const models: TsoaRoute.Models = {
-  "ConfirmedBot": {
+  "Bot": {
     "properties": {
       "detectionStatus": { "dataType": "enum", "enums": ["REPORTED", "IN_PROCESS", "BOT", "NOT_BOT"], "required": true },
       "botReason": { "dataType": "enum", "enums": ["BOT", "VIOLENCE", "FAKE"], "required": true },
@@ -13,15 +13,15 @@ const models: TsoaRoute.Models = {
     },
   },
   "Bots": {
-    "additionalProperties": { "ref": "ConfirmedBot" },
+    "additionalProperties": { "ref": "Bot" },
   },
   "Report": {
     "properties": {
       "authKey": { "dataType": "string", "required": true },
-      "platform": { "dataType": "enum", "enums": ["TWITTER", "FACEBOOK", "INSTAGRAM"], "required": true },
-      "botReason": { "dataType": "enum", "enums": ["BOT", "VIOLENCE", "FAKE"], "required": true },
       "userId": { "dataType": "string", "required": true },
       "description": { "dataType": "string", "required": true },
+      "platform": { "dataType": "enum", "enums": ["TWITTER", "FACEBOOK", "INSTAGRAM"], "required": true },
+      "botReason": { "dataType": "enum", "enums": ["BOT", "VIOLENCE", "FAKE"], "required": true },
     },
   },
 };

@@ -19,7 +19,7 @@ import {
 	SuccessResponse,
 	Tags
 } from 'tsoa';
-import { Bots, Report, ConfirmedBot, Platform } from '../models/symbols';
+import { Bots, Report, Bot, Platform } from '../models/symbols';
 
 const botsCache = new NodeCache({
 	stdTTL: 60 * 60 * 2, // Each 2 hours reread bots from db.
@@ -46,7 +46,7 @@ export class BotimController extends Controller {
 		let failToRetriveFromCache = false;
 		/** Iterate on userIds to look for cached data about him. */
 		for (const userId of userIds) {
-			const cachedBot: ConfirmedBot | string = botsCache.get(`${platform}:${userId}`);
+			const cachedBot: Bot | string = botsCache.get(`${platform}:${userId}`);
 			/** If not *all* users cached, abort and retrieve all from db. */
 			if (!cachedBot) {
 				failToRetriveFromCache = true;
@@ -57,7 +57,7 @@ export class BotimController extends Controller {
 			 * If the user marked as 'NOT_EXIST' ignore it.
 			 */
 			if (cachedBot !== 'NOT_EXIST') {
-				cachedBots[userId] = cachedBot as ConfirmedBot;
+				cachedBots[userId] = cachedBot as Bot;
 			}
 		}
 
