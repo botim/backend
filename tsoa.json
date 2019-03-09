@@ -1,0 +1,34 @@
+{
+    "swagger": {
+        "outputDirectory": "./",
+        "entryFile": "./src/index.ts",
+        "host": "localhost:8080",
+        "basePath": "/",
+        "tags": [
+            {
+                "name": "Botim",
+                "description": "Botim on you, israel."
+            }
+        ],
+        "name": "Botim - extention backend",
+        "description": "",
+        "securityDefinitions": {
+            "reporterAuth": {
+                "type": "apiKey",
+                "name": "Cookie",
+                "in": "header"
+            }
+        },
+        "schemes": [
+            "http"
+        ],
+        "yaml" : true
+    },
+    "routes": {
+        "basePath": "/",
+        "entryFile": "./src/index.ts",
+        "routesDir": "./src/routers",
+        "middlewareTemplate": "./src/routers/expressRoutesTemplate.ts.tsoa",
+        "authenticationModule": "./src/security/authentication.ts"
+    }
+}

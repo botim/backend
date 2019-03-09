@@ -1,0 +1,117 @@
+basePath: /
+consumes:
+    - application/json
+definitions:
+    BotMeta:
+        properties:
+            detectionStatus:
+                type: string
+                enum:
+                    - REPORTED
+                    - IN_PROCESS
+                    - BOT
+                    - NOT_BOT
+            platfrom:
+                type: string
+                enum:
+                    - TWITTER
+                    - FACEBOOK
+                    - INSTAGRAM
+            postId:
+                type: string
+                description: 'id of post, tweet, etc.'
+            botReason:
+                type: string
+                enum:
+                    - BOT
+                    - VIOLENCE
+                    - FAKE
+        required:
+            - detectionStatus
+            - platfrom
+            - postId
+            - botReason
+        type: object
+    Report:
+        properties:
+            platform:
+                type: string
+                enum:
+                    - TWITTER
+                    - FACEBOOK
+                    - INSTAGRAM
+            botReason:
+                type: string
+                enum:
+                    - BOT
+                    - VIOLENCE
+                    - FAKE
+            userId:
+                type: string
+        required:
+            - platform
+            - botReason
+            - userId
+        type: object
+info:
+    title: 'Botim - extention backend'
+    version: 1.0.0
+    description: 'Using latest JavaScript features on the server'
+    license:
+        name: MIT
+paths:
+    /botim/confirmed:
+        get:
+            operationId: GetConfirmed
+            produces:
+                - application/json
+            responses:
+                '200':
+                    description: Ok
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/BotMeta'
+                '501':
+                    description: 'Server error'
+            description: 'Get all confirmed botim.'
+            tags:
+                - Botim
+            security: []
+            parameters: []
+    /botim/suspected:
+        post:
+            operationId: ReportSuspected
+            produces:
+                - application/json
+            responses:
+                '204':
+                    description: 'No content'
+                '501':
+                    description: 'Server error'
+            description: 'Report a bot.'
+            tags:
+                - Botim
+            security: []
+            parameters:
+                -
+                    in: body
+                    name: report
+                    required: true
+                    schema:
+                        $ref: '#/definitions/Report'
+produces:
+    - application/json
+swagger: '2.0'
+securityDefinitions:
+    reporterAuth:
+        type: apiKey
+        name: Cookie
+        in: header
+host: 'localhost:8080'
+tags:
+    -
+        name: Botim
+        description: 'Botim on you, israel.'
+schemes:
+    - http
