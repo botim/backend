@@ -69,6 +69,7 @@ export class BotimController extends Controller {
    * Report a bot.
    */
   @Response(501, 'Server error')
+  @Response(401, 'Authntication fail')
   @Security('reporterAuth')
   @Post('suspected')
   public async reportSuspected(@Body() report: Report): Promise<void> {
