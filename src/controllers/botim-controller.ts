@@ -1,9 +1,9 @@
 import * as NodeCache from 'node-cache';
 import { Body, Controller, Query, Get, Post, Response, Route, Security, Tags } from 'tsoa';
 
-import { getBotsByIds } from '../data/confirmed';
+import { getUsersBotsMap } from '../data/confirmed';
 import { createNewReport } from '../data/suspected';
-import { BotMap, Report, Platform } from '../models/symbols';
+import { BotMap, Bot, Platform } from '../models/symbols';
 
 const botsCache = new NodeCache({
   stdTTL: +process.env.CACHE_TTL || 3600,
@@ -48,7 +48,7 @@ export class BotimController extends Controller {
     // }
 
     /** If cache not hold all bots yet, update cache for next time ;) */
-    const bots = await getBotsByIds(userIds, platform);
+    const bots = await getUsersBotsMap(userIds, platform);
 
     // /** Update cache. */
     // for (const [userId, confirmedBot] of Object.entries(bots)) {
@@ -72,7 +72,7 @@ export class BotimController extends Controller {
   @Response(401, 'Authntication fail')
   @Security('reporterAuth')
   @Post('suspected')
-  public async reportSuspected(@Body() report: Report): Promise<void> {
+  public async reportSuspected(@Body() report: Bot): Promise<void> {
     await createNewReport(report);
   }
 }
