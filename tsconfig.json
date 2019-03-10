@@ -4,16 +4,10 @@
     "module": "commonjs",
     "outDir": "dist",
     "sourceMap": true,
-    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
-  "files": [
-    "./src/models/symbols.d.ts"
-  ],
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "src/routers/expressRoutesTemplate.ts.tsoa",
-  ]
+  "files": ["src/models/symbols.ts"],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "src/routers/expressRoutesTemplate.ts.tsoa"]
 }
