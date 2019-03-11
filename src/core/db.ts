@@ -1,6 +1,7 @@
 import 'reflect-metadata';
-import { createConnection, Connection, EntityManager } from 'typeorm';
-import { Bot, Reporter } from '../models/symbols';
+import { createConnection, Connection } from 'typeorm';
+
+import { Bot, Reporter } from '../models';
 
 const { DATABASE_URL } = process.env;
 
