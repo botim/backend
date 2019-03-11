@@ -1,9 +1,10 @@
 import * as express from 'express';
 import * as NodeCache from 'node-cache';
-import { AuthedRequest } from '../models/symbols';
-import { checkReporterKey } from '../data/reporters';
 
-const reportesCache = new NodeCache({
+import { AuthenticatedRequest } from '../models';
+import { checkReporterKey } from '../data';
+
+const reportersCache = new NodeCache({
   stdTTL: 60 * 60 * 2, // Every 2 hours reread key from DB.
   checkperiod: 60 * 30 // Clear old cache every 30 minutes.
 });
@@ -20,17 +21,17 @@ export const expressAuthentication = async (request: express.Request, scopes: st
   }
 
   /** Make sure that there is a body, and the body contains the API key. */
-  const authedRequest: AuthedRequest = request.body;
-  if (authedRequest && authedRequest.authKey) {
+  const authenticatedRequest: AuthenticatedRequest = request.body;
+  if (authenticatedRequest && authenticatedRequest.reporterKey) {
     // If API key valid in cache, it's enough.
-    if (reportesCache.get(authedRequest.authKey)) {
+    if (reportersCache.get(authenticatedRequest.reporterKey)) {
       return;
     }
 
     /** Check API key of the reporter. */
-    if (await checkReporterKey(authedRequest.authKey)) {
+    if (await checkReporterKey(authenticatedRequest.reporterKey)) {
       /** Save it in the cache. */
-      reportesCache.set(authedRequest.authKey, true);
+      reportersCache.set(authenticatedRequest.reporterKey, true);
       return;
     }
   }

@@ -7,7 +7,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "files": ["src/models/symbols.ts"],
   "include": ["src/**/*"],
   "exclude": ["node_modules", "src/routers/expressRoutesTemplate.ts.tsoa"]
 }

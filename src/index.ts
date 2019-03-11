@@ -1,4 +1,12 @@
 import * as http from 'http';
+import * as dotenv from 'dotenv';
+import { existsSync } from 'fs';
+
+// load environment variable from .env file
+if (existsSync('.env')) {
+  dotenv.config();
+}
+
 import app from './app';
 
 // Start HTTP application

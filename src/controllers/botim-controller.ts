@@ -1,9 +1,9 @@
 import * as NodeCache from 'node-cache';
 import { Body, Controller, Query, Get, Post, Response, Route, Security, Tags } from 'tsoa';
 
-import { getUsersBotsMap } from '../data/confirmed';
-import { createNewReport } from '../data/suspected';
-import { BotMap, Bot, Platform } from '../models/symbols';
+import { getUsersBotsMap, createNewReport } from '../data';
+import { BotMap, Platform } from '../core';
+import { Bot } from '../models';
 
 const botsCache = new NodeCache({
   stdTTL: +process.env.CACHE_TTL || 3600,
@@ -69,7 +69,7 @@ export class BotimController extends Controller {
    * Report a bot.
    */
   @Response(501, 'Server error')
-  @Response(401, 'Authntication fail')
+  @Response(401, 'Authentication fail')
   @Security('reporterAuth')
   @Post('suspected')
   public async reportSuspected(@Body() report: Bot): Promise<void> {

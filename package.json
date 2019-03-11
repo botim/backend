@@ -16,7 +16,7 @@
     "jscopy": "copyfiles -u 1 src/**/*.js dist",
     "prepare": "tsoa routes && tsoa swagger && tsc && npm run jscopy",
     "build": "npm run prepare",
-    "start": "npm run build && node dist/index.js",
+    "start": "npm run build && node --inspect dist/index.js",
     "format": "prettier --write \"src/**/*.{ts,json}\""
   },
   "keywords": [
@@ -34,6 +34,8 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "copyfiles": "^2.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "express-rate-limit": "^3.4.0",
     "generic-json-sanitizer": "^1.0.1",
@@ -51,6 +53,7 @@
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
+    "@types/dotenv": "^6.1.0",
     "@types/express": "^4.16.0",
     "@types/node": "^10.12.30",
     "@types/node-cache": "^4.1.3",
