@@ -1,0 +1,23 @@
+#list {
+    list-style-type: none;
+    margin: 0;padding: 0;
+
+    #bot-item {
+        background: rgb(238, 238, 238);
+        padding: 1.5em;
+        border-radius: 4px;
+        margin-bottom: 7px;
+        display: grid;
+        grid-template-columns: 60px auto;
+
+        ul {
+            margin-left: 20px;
+        }
+
+        img {
+            width: 100%;
+            margin: auto;
+        }
+
+    }
+}

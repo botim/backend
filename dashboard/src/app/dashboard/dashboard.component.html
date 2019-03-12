@@ -1,0 +1,98 @@
+<h1>Bots to analyze:</h1>
+
+<div *ngIf="bots">
+  <h4> 
+    <span> Total users: {{bots.length}},</span>
+    <span> Reported: {{getBotsByStatus('REPORTED').length}},</span>
+    <span> In progress: {{getBotsByStatus('IN_PROCESS').length}},</span>
+    <span> Bots: {{getBotsByStatus('BOT').length}},</span>
+    <span> Not bots: {{getBotsByStatus('NOT_BOT').length}}.</span>
+  </h4>
+ 
+</div>
+<!-- Re-read all bots -->
+<button color="primary" (click)="retriveBotsToAnalyze()" mat-fab>
+  <mat-icon>refresh</mat-icon>
+</button>
+
+<br>
+<br>
+<br>
+
+<!-- filter bots by looking for the string in any bot property -->
+<mat-form-field>
+  <input matInput type="text" placeholder="Look for..." [(ngModel)]="filterString">
+  <button mat-button *ngIf="filterString" matSuffix mat-icon-button aria-label="Clear" (click)="filterString=''">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>
+
+<!-- bots list -->
+<ul id="list" *ngIf="bots">
+  <!-- iterate on bots, and filter bots by 'filterString' filter -->
+  <li id="bot-item" *ngFor="let bot of primitiveFilter(bots, filterString)">
+
+    <!-- images free for commercial use from https://pixabay.com/vectors/ -->
+    <!-- show image, depend on bot status -->
+    <img src="assets/{{bot.status}}.png">
+    <ul style="list-style-type:none">
+      <li>
+
+        <!-- Use id -->
+        <span><b> User: </b>
+          {{bot.userId}}
+          <span *ngIf="bot.platform === 'TWITTER'">
+              <a href="https://twitter.com/{{bot.userId}}" target="_blank"> Watch the bot</a>
+            </span>
+        <span *ngIf="bot.platform === 'FACEBOOK'">
+              <a href="https://www.facebook.com/{{bot.userId}}" target="_blank"> Watch the bot</a>
+            </span>
+        <span *ngIf="bot.platform === 'INSTAGRAM'">
+              <a href="https://www.instagram.com/{{bot.userId}}" target="_blank"> Watch the bot</a>
+            </span> </span>
+      </li>
+      <!-- Platform -->
+      <li>
+        <span><b> Platform: </b> {{bot.platform}} </span>
+      </li>
+      <li>
+      <!-- Bot reasons -->
+      <li>
+        <span><b> Bot Reason: </b> {{bot.reasons}} </span>
+      </li>
+      <!-- Description -->
+      <li>
+        <span><b> Description: </b> {{bot.description}} </span>
+      </li>
+      <!-- Show comment link if exist -->
+      <li *ngIf="bot.commentId">
+        <span>
+          <b> Comment: </b> 
+          <a  *ngIf="bot.platform === 'TWITTER'" href="https://twitter.com/{{bot.userId}}/status/{{bot.commentId}}" target="_blank"> Watch the comment</a>
+          <a  *ngIf="bot.platform === 'FACEBOOK'" href="https://www.facebook.com/{{bot.userId}}/posts/{{bot.commentId}}" target="_blank">  Watch the post</a>
+          <a  *ngIf="bot.platform === 'INSTAGRAM'" href="https://www.instagram.com/{{bot.userId}}/p/{{bot.commentId}}" target="_blank"> Watch the comment</a>
+        </span>
+      </li>
+      <!-- Show reply in facebook if exsits -->
+      <li *ngIf="bot.platform === 'FACEBOOK' && bot.commentId && bot.replyCommentId">
+        <span>
+          <b> Replay: </b>
+          <a  href="https://www.facebook.com/{{bot.userId}}/posts/{{bot.commentId}}?comment_id={{bot.replyCommentId}}" target="_blank"> TODO</a>
+         </span>
+      </li>
+    </ul>
+
+    <!-- Enable analiyst to update bot status -->
+    <div id="selection">
+      <p>Status:</p>
+      <mat-form-field>
+        <mat-select [(value)]="bot.status" (selectionChange)="setUserStatus(bot)">
+          <mat-option value="REPORTED">Reported</mat-option>
+          <mat-option value="IN_PROCESS">In progress</mat-option>
+          <mat-option value="BOT">Bot</mat-option>
+          <mat-option value="NOT_BOT">Not bot</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </li>
+</ul>
