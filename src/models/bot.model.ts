@@ -32,7 +32,7 @@ export class Bot extends AuthenticatedRequest {
   @Column({ name: 'replay_comment_id', type: 'varchar', length: 30 })
   public replyCommentId?: string;
 
-  constructor(bot?: Partial<Bot>) {
+  constructor(private bot?: Partial<Bot>) {
     super(bot);
 
     if (bot) {

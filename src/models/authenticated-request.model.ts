@@ -8,7 +8,7 @@ export class AuthenticatedRequest {
   @Column({ name: 'reporter_key', type: 'varchar', length: 30 })
   reporterKey: string;
 
-  constructor(authenticatedRequest?: Partial<AuthenticatedRequest>) {
+  constructor(private authenticatedRequest?: Partial<AuthenticatedRequest>) {
     if (authenticatedRequest) {
       this.reporterKey = authenticatedRequest.reporterKey;
     }
