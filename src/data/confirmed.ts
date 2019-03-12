@@ -43,3 +43,10 @@ export const getUsersBotsMap = async (
 
   return botMap;
 };
+
+/** Get all bots in system. */
+export const getBots = async (): Promise<Bot[]> => {
+  /** Gets all bots in current platform that mention in userIds array */
+  const botRepository = getConnection().getRepository(Bot);
+  return await botRepository.find();
+};

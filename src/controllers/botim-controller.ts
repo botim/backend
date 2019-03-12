@@ -1,8 +1,19 @@
 import * as NodeCache from 'node-cache';
-import { Body, Controller, Query, Get, Post, Response, Route, Security, Tags } from 'tsoa';
+import {
+  Body,
+  Controller,
+  Query,
+  Get,
+  Post,
+  Put,
+  Response,
+  Route,
+  Security,
+  Tags
+} from 'tsoa';
 
-import { getUsersBotsMap, createNewReport } from '../data';
-import { BotMap, Platform } from '../core';
+import { getUsersBotsMap, createNewReport, getBots, updateBotStatus } from '../data';
+import { BotMap, BotUpdate, Platform } from '../core';
 import { Bot } from '../models';
 
 const botsCache = new NodeCache({
@@ -74,5 +85,33 @@ export class BotimController extends Controller {
   @Post('suspected')
   public async reportSuspected(@Body() report: Bot): Promise<void> {
     await createNewReport(report);
+  }
+
+  /**
+   * Get all bots as array.
+   */
+  @Response(501, 'Server error')
+  @Response(401, 'Authentication fail')
+  @Security('analystsAuth')
+  @Get()
+  public async getBots(): Promise<Bot[]> {
+    return await getBots();
+  }
+
+  /**
+   * Set bot status.
+   * @param userId Suspected bot to update status for.
+   * @param botUpdate The new status to set.
+   */
+  @Response(501, 'Server error')
+  @Response(401, 'Authentication fail')
+  @Security('analystsAuth')
+  @Put('{platfrom}/{userId}')
+  public async setBot(
+    platfrom: Platform,
+    userId: string,
+    @Body() botUpdate: BotUpdate
+  ): Promise<void> {
+    await updateBotStatus(platfrom, userId, botUpdate.setStatus);
   }
 }

@@ -9,6 +9,24 @@ const reportersCache = new NodeCache({
   checkperiod: 60 * 30 // Clear old cache every 30 minutes.
 });
 
+const { ALLOW_ANALYSTS_API } = process.env;
+const allowAnalystsAccess = ALLOW_ANALYSTS_API === 'true';
+if (!allowAnalystsAccess) {
+  console.info(
+    '\n------------------------NOTICE---------------------------------\n' +
+      '*             The analysts API are CLOSED.                    *\n' +
+      '---------------------------------------------------------------\n'
+  );
+} else {
+  console.warn(
+    '\n------------------------NOTICE----------------------------------\n' +
+      '* The analysts API are TOTALLY OPEN without any authentication,*\n' +
+      '* Make sure the server runs on a closed network,               *\n' +
+      '* Otherwise, anyone can manipulate data.                       *\n' +
+      '----------------------------------------------------------------\n'
+  );
+}
+
 /**
  * Cert Authentication middelwhere API.
  * the key should be the 'reporterKey' property in the body.
@@ -20,19 +38,28 @@ export const expressAuthentication = async (request: express.Request, scopes: st
     throw new Error('scope check fail');
   }
 
-  /** Make sure that there is a body, and the body contains the API key. */
-  const authenticatedRequest: AuthenticatedRequest = request.body;
-  if (authenticatedRequest && authenticatedRequest.reporterKey) {
-    // If API key valid in cache, it's enough.
-    if (reportersCache.get(authenticatedRequest.reporterKey)) {
+  if (scopes.indexOf('analystsAuth') !== -1) {
+    if (allowAnalystsAccess) {
       return;
     }
+    throw new Error('Analysts API are closed');
+  }
 
-    /** Check API key of the reporter. */
-    if (await checkReporterKey(authenticatedRequest.reporterKey)) {
-      /** Save it in the cache. */
-      reportersCache.set(authenticatedRequest.reporterKey, true);
-      return;
+  if (scopes.indexOf('reporterAuth') !== -1) {
+    /** Make sure that there is a body, and the body contains the API key. */
+    const authenticatedRequest: AuthenticatedRequest = request.body;
+    if (authenticatedRequest && authenticatedRequest.reporterKey) {
+      // If API key valid in cache, it's enough.
+      if (reportersCache.get(authenticatedRequest.reporterKey)) {
+        return;
+      }
+
+      /** Check API key of the reporter. */
+      if (await checkReporterKey(authenticatedRequest.reporterKey)) {
+        /** Save it in the cache. */
+        reportersCache.set(authenticatedRequest.reporterKey, true);
+        return;
+      }
     }
   }
 

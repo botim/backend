@@ -64,3 +64,4 @@ environment variables:
 - `REQUESTS_LIMIT` Maximum requests in 10 minutes window per IP. (default 1000).
 - `CACHE_TTL` Liveness of a bots cache, in seconds. (default 3600 = houre).
 - `CACHE_CHECK_PERIOD` Interval of cache liveness check. (default 1800 = 30 minutes).
+- `ALLOW_ANALYSTS_API` Open the analysts API, so bot status can be updated without any authentication, use it carefully and only in a closed network. (default is of course 'false').

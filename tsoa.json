@@ -17,6 +17,11 @@
         "type": "apiKey",
         "name": "Cookie",
         "in": "header"
+      },
+      "analystsAuth": {
+        "type": "apiKey",
+        "name": "Cookie",
+        "in": "header"
       }
     },
     "schemes": ["http"],

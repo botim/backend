@@ -1,5 +1,6 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
+import * as path from 'path';
 import * as cors from 'cors';
 import * as RateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
@@ -20,6 +21,9 @@ class App {
     /** Security is the first thing, right?  */
     this._vulnerabilityProtection();
 
+    /** Serve static client side */
+    this._serveStatic();
+
     /** Parse the request */
     this._dataParsing();
 
@@ -31,6 +35,18 @@ class App {
 
     /** And never sent errors back to client. */
     this._catchErrors();
+  }
+
+  /**
+   * Serve static files of front-end.
+   */
+  private _serveStatic() {
+    /** In / path only serve the index.html file */
+    this.express.get('/', (req: express.Request, res: express.Response) =>
+      res.sendFile(path.join(__dirname, '/public/index.html'))
+    );
+    /** Get any file in public directory */
+    this.express.use('/static', express.static(path.join(__dirname, '/public/')));
   }
 
   /**

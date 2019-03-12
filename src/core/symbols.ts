@@ -20,3 +20,7 @@ export enum Status {
 export interface BotMap {
   [key: string]: Status;
 }
+
+export interface BotUpdate {
+  setStatus: Status;
+}
