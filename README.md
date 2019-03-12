@@ -49,9 +49,7 @@ read [swagger.yaml](./swagger.yaml) file.
 
 ### Updating suspected to confirmed bots
 
-The reports go to `suspectedBots` table.
-
-The confirmed bots read from `confirmedBots` table.
+The reports go to `botim` table.
 
 And the reporters API key checks against `reporters` table.
 
