@@ -60,9 +60,6 @@ class App {
 
     // Allow access from browser extension, otherwise the request fails CORS
     this.express.use(cors());
-
-    // TODO: this isn't handled with helmet?
-    this.express.disable('x-powered-by');
   }
 
   /**
