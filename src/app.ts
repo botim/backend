@@ -8,7 +8,7 @@ import { sanitizeExpressMiddleware, sanitizeJsonSync } from 'generic-json-saniti
 import { RegisterRoutes } from './routers/routes';
 
 // controllers need to be referenced in order to get crawled by the TSOA generator
-import './controllers/botim-controller';
+import './controllers/user-statuses-controller';
 
 class App {
   public express: express.Express;

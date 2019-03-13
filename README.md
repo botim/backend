@@ -27,8 +27,8 @@ CREATE TYPE platform AS ENUM('TWITTER', 'FACEBOOK', 'INSTAGRAM');
 CREATE TYPE reason AS ENUM('BOT', 'VIOLENCE', 'FAKE');
 CREATE TYPE status AS ENUM('REPORTED', 'IN_PROCESS', 'BOT', 'NOT_BOT');
 
-DROP TABLE IF EXISTS botim;
-CREATE TABLE botim (ID SERIAL PRIMARY KEY, user_id VARCHAR(30), comment_id VARCHAR(30), replay_comment_id VARCHAR(30), platform platform, reasons reason[], status status, description VARCHAR(200), reporter_key VARCHAR(30));
+DROP TABLE IF EXISTS user_statuses;
+CREATE TABLE user_statuses (ID SERIAL PRIMARY KEY, user_id VARCHAR(30), comment_id VARCHAR(30), replay_comment_id VARCHAR(30), platform platform, reasons reason[], status status, description VARCHAR(200), reporter_key VARCHAR(30));
 
 DROP TABLE IF EXISTS reporters;
 CREATE TABLE reporters (ID SERIAL PRIMARY KEY, reporter_key VARCHAR(30));
@@ -49,7 +49,7 @@ read [swagger.yaml](./swagger.yaml) file.
 
 ### Updating suspected to confirmed bots
 
-The reports go to `botim` table.
+The reports go to `user_statuses` table.
 
 And the reporters API key checks against `reporters` table.
 

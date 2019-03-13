@@ -17,6 +17,6 @@ export enum Status {
   NOT_BOT = 'NOT_BOT'
 }
 
-export interface BotMap {
+export interface UserStatusMap {
   [key: string]: Status;
 }

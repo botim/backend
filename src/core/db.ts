@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { createConnection, Connection } from 'typeorm';
 
-import { Bot, Reporter } from '../models';
+import { UserStatus, Reporter } from '../models';
 
 const { DATABASE_URL } = process.env;
 
@@ -9,7 +9,7 @@ let connectionDriver: Connection;
 createConnection({
   url: DATABASE_URL,
   type: 'postgres',
-  entities: [Bot, Reporter],
+  entities: [UserStatus, Reporter],
   synchronize: false,
   logging: false
 })
