@@ -27,7 +27,11 @@ export class Cache {
     return this._nodeCache.get(key);
   }
 
-  /** Save or set value map by key to cache. */
+  /**
+   * Save or set value map by key to cache.
+   * @param key The key to mapping by.
+   * @param value The value to store.
+   */
   public async set(key: string | number, value: any): Promise<void> {
     this._nodeCache.set(key, value);
   }
