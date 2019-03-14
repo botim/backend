@@ -1,12 +1,10 @@
 import * as express from 'express';
-import * as NodeCache from 'node-cache';
-import * as moment from 'moment';
 
 import { AuthenticatedRequest } from '../models';
 import { checkReporterKey } from '../data';
 import { Cache, logger } from '../core';
 
-const reportersAuthCache = new Cache(moment.duration(2, 'hours'));
+const reportersAuthCache = new Cache(2 * 60 * 60);
 
 /**
  * Cert Authentication middelwhere API.

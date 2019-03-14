@@ -1,13 +1,12 @@
 import { Body, Controller, Query, Get, Post, Response, Route, Security, Tags } from 'tsoa';
-import * as moment from 'moment';
 
 import { getUserStatusMap, createNewReport } from '../data';
 import { Platform, UserStatusMap, Status, Cache } from '../core';
 import { UserStatus } from '../models';
 
 const usersCache = new Cache(
-  moment.duration(parseInt(process.env.USERS_CACHE_TTL || '1'), 'seconds'),
-  moment.duration(parseInt(process.env.USERS_CACHE_CHECK_PERIOD || '0'), 'seconds')
+  +process.env.USERS_CACHE_TTL || 1,
+  +process.env.USERS_CACHE_CHECK_PERIOD || 0
 );
 
 @Tags('UserStatuses')
