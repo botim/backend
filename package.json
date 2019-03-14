@@ -2,35 +2,17 @@
   "name": "bots-backend",
   "version": "1.0.0",
   "description": "Using latest JavaScript features on the server",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vmasto/express-babel.git"
-  },
-  "author": "Vassilis Mastorostergios <vmasto@gmail.com>",
   "license": "MIT",
   "main": "dist/index.js",
-  "engines": {
-    "npm": ">=3.10.0"
-  },
   "scripts": {
     "jscopy": "copyfiles -u 1 src/**/*.js dist",
-    "prepare": "tsoa routes && tsoa swagger && tsc && npm run jscopy",
+    "prepare": "tsoa routes && tsc && npm run jscopy",
     "build": "npm run prepare",
-    "start": "npm run build && node --inspect dist/index.js",
+    "start": "node dist/index.js",
+    "prepare:dev": "tsoa routes && tsoa swagger && tsc && npm run jscopy",
+    "start:dev": "npm run prepare:dev && node --inspect dist/index.js",
     "format": "prettier --write \"src/**/*.{ts,json}\""
   },
-  "keywords": [
-    "express",
-    "babel",
-    "boilerplate",
-    "scaffold",
-    "es6",
-    "es2015",
-    "es2016",
-    "es2017",
-    "jest",
-    "eslint"
-  ],
   "dependencies": {
     "body-parser": "^1.18.3",
     "copyfiles": "^2.1.0",
@@ -65,12 +47,5 @@
     "prettier": "^1.16.4",
     "ts-node": "^7.0.1",
     "typescript": "^3.3.3333"
-  },
-  "bugs": {
-    "url": "https://github.com/vmasto/express-babel/issues"
-  },
-  "homepage": "https://github.com/vmasto/express-babel#readme",
-  "directories": {
-    "test": "test"
   }
 }
