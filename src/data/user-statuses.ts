@@ -1,4 +1,4 @@
-import { In } from 'typeorm';
+import { In, Not } from 'typeorm';
 
 import { getConnection, UserStatusMap, Platform, Status } from '../core';
 import { UserStatus } from '../models';
@@ -11,7 +11,7 @@ export const getUserStatusOnlyMap = async (
   /** Gets all user statuses in current platform that mention in userIds array */
   const userStatusRepository = getConnection().getRepository(UserStatus);
   const userStatuses = await userStatusRepository.find({
-    where: { platform, userId: In(userIds) }
+    where: { platform, userId: In(userIds), status: Not(Status.DUPLICATE) }
   });
 
   const userStatusMap: UserStatusMap = {};
