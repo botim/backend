@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import { Duration } from 'moment';
 
 /**
- * Cache utile. wrap cache API to easy replac cache tool to redis client.
+ * Cache utility. wrap cache API to replace cache tool with redis client easily.
  */
 export class Cache {
   private _nodeCache: NodeCache;

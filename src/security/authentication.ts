@@ -4,7 +4,7 @@ import * as moment from 'moment';
 
 import { AuthenticatedRequest } from '../models';
 import { checkReporterKey } from '../data';
-import { Cache } from '../core';
+import { Cache, logger } from '../core';
 
 const reportersAuthCache = new Cache(moment.duration(2, 'hours'));
 
@@ -15,7 +15,7 @@ const reportersAuthCache = new Cache(moment.duration(2, 'hours'));
 export const expressAuthentication = async (request: express.Request, scopes: string[]) => {
   /** If the routing security sent wrong security scope. */
   if (!scopes || scopes.length < 1) {
-    console.error('invalid or empty security scope');
+    logger.error('invalid or empty security scope');
     throw new Error('scope check fail');
   }
 
