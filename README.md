@@ -28,10 +28,10 @@ CREATE TYPE reason AS ENUM('BOT', 'VIOLENCE', 'FAKE');
 CREATE TYPE status AS ENUM('REPORTED', 'IN_PROCESS', 'BOT', 'NOT_BOT');
 
 DROP TABLE IF EXISTS user_statuses;
-CREATE TABLE user_statuses (ID SERIAL PRIMARY KEY, user_id VARCHAR(30), comment_id VARCHAR(30), replay_comment_id VARCHAR(30), platform platform, reasons reason[], status status, description VARCHAR(200), reporter_key VARCHAR(30));
+CREATE TABLE user_statuses (ID SERIAL PRIMARY KEY, user_id VARCHAR(30) NOT NULL, comment_id VARCHAR(30), replay_comment_id VARCHAR(30), platform platform NOT NULL, reasons reason[] NOT NULL, status status NOT NULL, description VARCHAR(200), reporter_key VARCHAR(30) NOT NULL);
 
 DROP TABLE IF EXISTS reporters;
-CREATE TABLE reporters (ID SERIAL PRIMARY KEY, platform platform, user_id VARCHAR(30), reporter_key VARCHAR(30));
+CREATE TABLE reporters (ID SERIAL PRIMARY KEY, platform platform, user_id VARCHAR(30), reporter_key VARCHAR(30) NOT NULL);
 
 ```
 
