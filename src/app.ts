@@ -5,6 +5,8 @@ import * as RateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import { sanitizeExpressMiddleware, sanitizeJsonSync } from 'generic-json-sanitizer';
 
+import { logger } from './core';
+
 import { RegisterRoutes } from './routers/routes';
 
 // controllers need to be referenced in order to get crawled by the TSOA generator
@@ -115,13 +117,13 @@ class App {
         next: express.NextFunction
       ) => {
         try {
-          console.warn(
+          logger.warn(
             `express route crash,  req: ${req.method} ${req.path} error: ${
               err.message
             } body: ${JSON.stringify(req.body)}`
           );
         } catch (error) {
-          console.warn(`Ok... even the crash route catcher crashd...`);
+          logger.error(`Ok... even the crash route catcher crashd...`);
         }
         res.status(500).send();
       }
