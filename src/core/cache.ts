@@ -1,6 +1,4 @@
 import * as NodeCache from 'node-cache';
-import * as moment from 'moment';
-import { Duration } from 'moment';
 
 /**
  * Cache utility. wrap cache API to replace cache tool with redis client easily.
@@ -10,13 +8,13 @@ export class Cache {
 
   /**
    * Init Cache.
-   * @param ttl Time to hold value in cache.
-   * @param checkperiod Automatic delete check interval.
+   * @param ttl Time duration in seconds to hold value in cache.
+   * @param checkperiod Automatic delete check interval duration in seconds.
    */
-  constructor(ttl: Duration, checkperiod: Duration = moment.duration(0)) {
+  constructor(ttl: number, checkperiod: number = 0) {
     this._nodeCache = new NodeCache({
-      stdTTL: ttl.asSeconds(),
-      checkperiod: checkperiod.asSeconds()
+      stdTTL: ttl,
+      checkperiod: checkperiod
     });
   }
 
