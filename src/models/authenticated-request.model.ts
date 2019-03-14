@@ -5,7 +5,7 @@ import { Entity, Column } from 'typeorm';
  */
 @Entity()
 export class AuthenticatedRequest {
-  @Column({ name: 'reporter_key', type: 'varchar', length: 30 })
+  @Column({ name: 'reporter_key', type: 'varchar', length: 30, nullable: false })
   reporterKey: string;
 
   constructor(private authenticatedRequest?: Partial<AuthenticatedRequest>) {
