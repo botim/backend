@@ -41,6 +41,11 @@ class App {
   private _routes(): void {
     /** Use generated routers (by TSOA) */
     RegisterRoutes(this.express);
+
+    /** redirect to the website when user access the root path */
+    this.express.get('/', (req: express.Request, res: express.Response) =>
+      res.redirect('https://botim.online')
+    );
   }
 
   /**
@@ -123,7 +128,7 @@ class App {
             } body: ${JSON.stringify(req.body)}`
           );
         } catch (error) {
-          logger.error(`Ok... even the crash route catcher crashd...`);
+          logger.error(`Ok... even the crash route catcher crashed...`);
         }
         res.status(500).send();
       }
