@@ -4,8 +4,6 @@ import { AuthenticatedRequest } from '../models';
 import { checkReporterKey } from '../data';
 import { Cache, logger } from '../core';
 
-const reportersAuthCache = new Cache(2 * 60 * 60);
-
 /**
  * Cert Authentication middelwhere API.
  * the key should be the 'reporterKey' property in the body.
@@ -20,22 +18,8 @@ export const expressAuthentication = async (request: express.Request, scopes: st
   /** Make sure that there is a body, and the body contains the API key. */
   const authenticatedRequest: AuthenticatedRequest = request.body;
   if (authenticatedRequest && authenticatedRequest.reporterKey) {
-    /** Before geting data from DB, try to get access from cache. */
-    const reporterAccess = await reportersAuthCache.get(authenticatedRequest.reporterKey);
-
-    /** If access cached as 'true' */
-    if (reporterAccess) {
+    if (await checkReporterKey(authenticatedRequest.reporterKey)) {
       return;
-    }
-
-    /** If access not cached yet */
-    if (reporterAccess === undefined) {
-      const reporterAccess: boolean = await checkReporterKey(authenticatedRequest.reporterKey);
-      await reportersAuthCache.set(authenticatedRequest.reporterKey, reporterAccess);
-
-      if (reporterAccess) {
-        return;
-      }
     }
   }
 
