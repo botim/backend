@@ -1,13 +1,12 @@
 import * as express from 'express';
 import * as NodeCache from 'node-cache';
+import * as moment from 'moment';
 
 import { AuthenticatedRequest } from '../models';
 import { checkReporterKey } from '../data';
+import { Cache } from '../core';
 
-const reportersCache = new NodeCache({
-  stdTTL: 60 * 60 * 2, // Every 2 hours reread key from DB.
-  checkperiod: 60 * 30 // Clear old cache every 30 minutes.
-});
+const reportersAuthCache = new Cache(moment.duration(2, 'hours'));
 
 /**
  * Cert Authentication middelwhere API.
@@ -23,16 +22,22 @@ export const expressAuthentication = async (request: express.Request, scopes: st
   /** Make sure that there is a body, and the body contains the API key. */
   const authenticatedRequest: AuthenticatedRequest = request.body;
   if (authenticatedRequest && authenticatedRequest.reporterKey) {
-    // If API key valid in cache, it's enough.
-    if (reportersCache.get(authenticatedRequest.reporterKey)) {
+    /** Before geting data from DB, try to get access from cache. */
+    const reporterAccess = await reportersAuthCache.get(authenticatedRequest.reporterKey);
+
+    /** If access cached as 'true' */
+    if (reporterAccess) {
       return;
     }
 
-    /** Check API key of the reporter. */
-    if (await checkReporterKey(authenticatedRequest.reporterKey)) {
-      /** Save it in the cache. */
-      reportersCache.set(authenticatedRequest.reporterKey, true);
-      return;
+    /** If access not cached yet */
+    if (reporterAccess === undefined) {
+      const reporterAccess: boolean = await checkReporterKey(authenticatedRequest.reporterKey);
+      await reportersAuthCache.set(authenticatedRequest.reporterKey, reporterAccess);
+
+      if (reporterAccess) {
+        return;
+      }
     }
   }
 

@@ -1,13 +1,14 @@
 import { Body, Controller, Query, Get, Post, Response, Route, Security, Tags } from 'tsoa';
+import * as moment from 'moment';
 
 import { getUserStatusMap, createNewReport } from '../data';
-import { Platform, UserStatusMap } from '../core';
+import { Platform, UserStatusMap, Status, Cache } from '../core';
 import { UserStatus } from '../models';
 
-// const botsCache = new NodeCache({
-//   stdTTL: +process.env.CACHE_TTL || 3600,
-//   checkperiod: +process.env.CACHE_CHECK_PERIOD || 1800
-// });
+const usersCache = new Cache(
+  moment.duration(parseInt(process.env.USERS_CACHE_TTL || '1'), 'seconds'),
+  moment.duration(parseInt(process.env.USERS_CACHE_CHECK_PERIOD || '0'), 'seconds')
+);
 
 @Tags('UserStatuses')
 @Route('/')
@@ -21,47 +22,29 @@ export class UserStatusesController extends Controller {
     @Query() userIds: string[],
     @Query() platform: Platform
   ): Promise<UserStatusMap> {
-    // /** Try to retrieve bots from the cache before reading data from the DB. */
-    // const cachedBots: Bots = {};
-    // let failToRetrieveFromCache = false;
-    // /** Iterate on userIds to look for cached data about him. */
-    // for (const userId of userIds) {
-    //   const cachedBot: Bot | string = botsCache.get(`${platform}:${userId}`);
-    //   /** If not *all* users cached, abort and retrieve all from db. */
-    //   if (!cachedBot) {
-    //     failToRetrieveFromCache = true;
-    //     break;
-    //   }
+    /** Try to retrieve users status from the cache before reading data from the DB. */
+    const usersStatusMap: UserStatusMap = {};
+    for (const userId of userIds) {
+      const cacheResult = await usersCache.get(`${platform}:${userId}`);
+      if (!cacheResult) {
+        break;
+      }
+      usersStatusMap[userId] = cacheResult;
+    }
 
-    //   /**
-    //    * If the user marked as 'NOT_EXIST' ignore it.
-    //    */
-    //   if (cachedBot !== 'NOT_EXIST') {
-    //     cachedBots[userId] = cachedBot as Bot;
-    //   }
-    // }
+    /** If found cache result for all users, return cache map only. */
+    if (Object.keys(usersStatusMap).length === userIds.length) {
+      return usersStatusMap;
+    }
 
-    // /** If all users cached, return the bots from the cache. */
-    // if (!failToRetrieveFromCache) {
-    //   return cachedBots;
-    // }
+    const currentUsersStatus = await getUserStatusMap(userIds, platform);
 
-    /** If cache not hold all user statuses yet, update cache for next time ;) */
-    const userStatuses = await getUserStatusMap(userIds, platform);
+    /** Hold all user current status in the cache for next time ;) */
+    for (const [userId, currentStatus] of Object.entries(currentUsersStatus)) {
+      await usersCache.set(`${platform}:${userId}`, currentStatus);
+    }
 
-    // /** Update cache. */
-    // for (const [userId, confirmedBot] of Object.entries(bots)) {
-    //   botsCache.set(`${platform}:${userId}`, confirmedBot);
-    // }
-
-    // /** Mark all users that not in bots as 'NOT_EXIST' in the cache for next time. */
-    // for (const userId of userIds) {
-    //   if (!(userId in bots)) {
-    //     botsCache.set(`${platform}:${userId}`, 'NOT_EXIST');
-    //   }
-    // }
-
-    return userStatuses;
+    return currentUsersStatus;
   }
 
   /**
