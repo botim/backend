@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-import { Bot, Status } from '../models/symbols';
+import { UserStatus, Status } from '../models/symbols';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
     NOT_BOT: 3
   };
 
-  bots: Bot[] = [];
+  bots: UserStatus[] = [];
   filterString: string;
 
   constructor(private data: DataService) {}
@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
   async retriveBotsToAnalyze() {
     this.bots = (await this.data.getBotsToAnalyze().catch((error: HttpErrorResponse) => {
       this.onHttpError('Get bots fail', error);
-    })) as Bot[];
+    })) as UserStatus[];
 
     if (!this.bots) {
       this.bots = [];
@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
     }
 
     // Sort bots by status and userid
-    this.bots.sort((a: Bot, b: Bot) => {
+    this.bots.sort((a: UserStatus, b: UserStatus) => {
       if (
         DashboardComponent.BOTS_ORDER_MAP[a.status] ===
         DashboardComponent.BOTS_ORDER_MAP[b.status]
@@ -54,20 +54,20 @@ export class DashboardComponent implements OnInit {
   }
 
   /** Set bot status */
-  setUserStatus(bot: Bot) {
+  setUserStatus(bot: UserStatus) {
     this.data.setStatus(bot).catch(error => {
       this.onHttpError('Set bot status fail', error);
     });
   }
 
   /** Filter bots by given string */
-  primitiveFilter(bots: Bot[], filterString: string): Bot[] {
+  primitiveFilter(bots: UserStatus[], filterString: string): UserStatus[] {
     /** If string empty return all */
     if (!filterString) {
       return bots;
     }
 
-    const filterdBots: Bot[] = [];
+    const filterdBots: UserStatus[] = [];
     filterString = filterString.toLowerCase();
     for (const bot of bots) {
       /** Iterate on all bot properties */
@@ -102,8 +102,8 @@ export class DashboardComponent implements OnInit {
   }
 
   /** Get bots array filterd by bot status */
-  getBotsByStatus(status: Status): Bot[] {
-    const filterdBots: Bot[] = [];
+  getBotsByStatus(status: Status): UserStatus[] {
+    const filterdBots: UserStatus[] = [];
     for (const bot of this.bots) {
       if (bot.status === status) {
         filterdBots.push(bot);

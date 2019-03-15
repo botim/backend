@@ -74,7 +74,7 @@ export class UserStatusesController extends Controller {
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Security('analystsAuth')
-  @Get()
+  @Get('users')
   public async getAllUsers(): Promise<UserStatus[]> {
     return await getUsers();
   }
@@ -87,7 +87,7 @@ export class UserStatusesController extends Controller {
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Security('analystsAuth')
-  @Put('{platfrom}/{userId}')
+  @Put('users/{platfrom}/{userId}')
   public async updateUser(
     platfrom: Platform,
     userId: string,

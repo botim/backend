@@ -14,15 +14,18 @@ export enum Status {
   REPORTED = 'REPORTED',
   IN_PROCESS = 'IN_PROCESS',
   BOT = 'BOT',
-  NOT_BOT = 'NOT_BOT'
+  NOT_BOT = 'NOT_BOT',
+  DUPLICATE = 'DUPLICATE'
 }
 
-export interface Bot {
-  userId: string;
-  description: string;
+export interface UserStatus {
   platform: Platform;
-  status: Status;
-  reasons: Reason[];
+  userId: string;
+  postId: string;
   commentId?: string;
   replyCommentId?: string;
+  reasons: Reason[];
+  status: Status;
+  description?: string;
+  duplicates: UserStatus[];
 }
