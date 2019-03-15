@@ -66,3 +66,4 @@ typings/
 dist
 routes.ts
 swagger.yaml
+.vscode/settings.json
