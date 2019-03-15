@@ -1,5 +1,3 @@
-import { Not } from 'typeorm';
-
 import { getConnection, Status } from '../core';
 import { UserStatus } from '../models';
 
@@ -27,8 +25,15 @@ export const createNewReport = async (report: UserStatus) => {
 
   /** If the user reported, try to get if exact report exist */
   if (userReport) {
+    /** Note that typeORM null is equal to 'null' and not to 'undefined'. */
     const existsExactReport = await userStatusRepository.findOne({
-      where: { platform, userId, postId, commentId, replyCommentId }
+      where: {
+        platform,
+        userId,
+        postId,
+        commentId: commentId || null,
+        replyCommentId: replyCommentId || null
+      }
     });
 
     /** Case exact report exists, ignore the report. */
