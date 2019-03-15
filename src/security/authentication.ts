@@ -41,11 +41,12 @@ export const expressAuthentication = async (request: express.Request, scopes: st
   }
 
   if (scopes.indexOf('reporterAuth') !== -1) {
-  /** Make sure that there is a body, and the body contains the API key. */
-  const authenticatedRequest: AuthenticatedRequest = request.body;
-  if (authenticatedRequest && authenticatedRequest.reporterKey) {
-    if (await checkReporterKey(authenticatedRequest.reporterKey)) {
-      return;
+    /** Make sure that there is a body, and the body contains the API key. */
+    const authenticatedRequest: AuthenticatedRequest = request.body;
+    if (authenticatedRequest && authenticatedRequest.reporterKey) {
+      if (await checkReporterKey(authenticatedRequest.reporterKey)) {
+        return;
+      }
     }
   }
 
