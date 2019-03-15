@@ -1,3 +1,3 @@
-export * from './confirmed';
+export * from './user-statuses';
 export * from './reporters';
-export * from './suspected';
+export * from './report';

@@ -5,10 +5,10 @@ import { Entity, Column } from 'typeorm';
  */
 @Entity()
 export class AuthenticatedRequest {
-  @Column({ name: 'reporter_key', type: 'varchar', length: 30 })
+  @Column({ name: 'reporter_key', type: 'varchar', length: 30, nullable: false })
   reporterKey: string;
 
-  constructor(authenticatedRequest?: Partial<AuthenticatedRequest>) {
+  constructor(private authenticatedRequest?: Partial<AuthenticatedRequest>) {
     if (authenticatedRequest) {
       this.reporterKey = authenticatedRequest.reporterKey;
     }

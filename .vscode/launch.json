@@ -10,13 +10,7 @@
       "sourceMaps": true,
       "smartStep": true,
       "internalConsoleOptions": "openOnSessionStart",
-      "outFiles": [
-        "${workspaceFolder}/dist/**/*.js"
-      ],
-      "env": {
-        "CACHE_TTL" : "5",
-        "CACHE_CHECK_PERIOD" : "2",
-      }
-    },
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+    }
   ]
 }

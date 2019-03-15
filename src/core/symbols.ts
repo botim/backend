@@ -14,13 +14,10 @@ export enum Status {
   REPORTED = 'REPORTED',
   IN_PROCESS = 'IN_PROCESS',
   BOT = 'BOT',
-  NOT_BOT = 'NOT_BOT'
+  NOT_BOT = 'NOT_BOT',
+  DUPLICATE = 'DUPLICATE'
 }
 
-export interface BotMap {
+export interface UserStatusMap {
   [key: string]: Status;
-}
-
-export interface BotUpdate {
-  setStatus: Status;
 }

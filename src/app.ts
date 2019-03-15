@@ -6,10 +6,12 @@ import * as RateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import { sanitizeExpressMiddleware, sanitizeJsonSync } from 'generic-json-sanitizer';
 
+import { logger } from './core';
+
 import { RegisterRoutes } from './routers/routes';
 
 // controllers need to be referenced in order to get crawled by the TSOA generator
-import './controllers/botim-controller';
+import './controllers/user-statuses-controller';
 
 class App {
   public express: express.Express;
@@ -55,6 +57,11 @@ class App {
   private _routes(): void {
     /** Use generated routers (by TSOA) */
     RegisterRoutes(this.express);
+
+    /** redirect to the website when user access the root path */
+    this.express.get('/', (req: express.Request, res: express.Response) =>
+      res.redirect('https://botim.online')
+    );
   }
 
   /**
@@ -76,9 +83,6 @@ class App {
 
     // Allow access from browser extension, otherwise the request fails CORS
     this.express.use(cors());
-
-    // TODO: this isn't handled with helmet?
-    this.express.disable('x-powered-by');
   }
 
   /**
@@ -134,13 +138,13 @@ class App {
         next: express.NextFunction
       ) => {
         try {
-          console.warn(
+          logger.warn(
             `express route crash,  req: ${req.method} ${req.path} error: ${
               err.message
             } body: ${JSON.stringify(req.body)}`
           );
         } catch (error) {
-          console.warn(`Ok... even the crash route catcher crashd...`);
+          logger.error(`Ok... even the crash route catcher crashed...`);
         }
         res.status(500).send();
       }
