@@ -28,7 +28,7 @@ CREATE TYPE reason AS ENUM('BOT', 'VIOLENCE', 'FAKE');
 CREATE TYPE status AS ENUM('REPORTED', 'IN_PROCESS', 'BOT', 'NOT_BOT', 'DUPLICATE');
 
 DROP TABLE IF EXISTS user_statuses;
-CREATE TABLE user_statuses (ID SERIAL PRIMARY KEY, user_id VARCHAR(30) NOT NULL, post_id VARCHAR(30), comment_id VARCHAR(30), replay_comment_id VARCHAR(30), platform platform NOT NULL, reasons reason[] NOT NULL, status status NOT NULL, description VARCHAR(200), reporter_key VARCHAR(30) NOT NULL, unique (user_id, platform, post_id, comment_id, replay_comment_id));
+CREATE TABLE user_statuses (ID SERIAL PRIMARY KEY, platform platform NOT NULL, user_id VARCHAR(30) NOT NULL, post_id VARCHAR(30) NOT NULL, comment_id VARCHAR(30), reply_comment_id VARCHAR(30), reasons reason[] NOT NULL, status status NOT NULL, description VARCHAR(200), reporter_key VARCHAR(30) NOT NULL, unique (platform, user_id, post_id, comment_id, reply_comment_id));
 
 DROP TABLE IF EXISTS reporters;
 CREATE TABLE reporters (ID SERIAL PRIMARY KEY, platform platform, user_id VARCHAR(30), reporter_key VARCHAR(30) NOT NULL);

@@ -1,5 +1,3 @@
-import { Not } from 'typeorm';
-
 import { getConnection, Status } from '../core';
 import { UserStatus } from '../models';
 
@@ -7,32 +5,34 @@ import { UserStatus } from '../models';
  * Save a new report.
  * If the same report already exists, ignore the report.
  * If the user already reported,
- * but not in same post command and replay.
+ * but not in same post comment and reply.
  * mark report as 'DUPLICATE'.
  * @param report Report to create.
  */
 export const createNewReport = async (report: UserStatus) => {
   let initialStatus: Status = Status.REPORTED;
+  const { platform, userId, postId, commentId, replyCommentId } = report;
 
   const userStatusRepository = getConnection().getRepository(UserStatus);
 
   /** Try get the user exists report */
   const userReport = await userStatusRepository.findOne({
     where: {
-      platform: report.platform,
-      userId: report.userId
+      platform,
+      userId
     }
   });
 
   /** If the user reported, try to get if exact report exist */
   if (userReport) {
+    /** Note that typeORM null is equal to 'null' and not to 'undefined'. */
     const existsExactReport = await userStatusRepository.findOne({
       where: {
-        platform: report.platform,
-        userId: report.userId,
-        postId: report.postId ? report.postId : null,
-        commentId: report.commentId ? report.commentId : null,
-        replayCommentId: report.replayCommentId ? report.replayCommentId : null
+        platform,
+        userId,
+        postId,
+        commentId: commentId || null,
+        replyCommentId: replyCommentId || null
       }
     });
 
