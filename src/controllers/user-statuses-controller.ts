@@ -1,7 +1,18 @@
-import { Body, Controller, Query, Get, Post, Response, Route, Security, Tags } from 'tsoa';
+import {
+  Body,
+  Controller,
+  Query,
+  Get,
+  Post,
+  Response,
+  Route,
+  Security,
+  Tags,
+  Header
+} from 'tsoa';
 
 import { getUserStatusMap, createNewReport } from '../data';
-import { Platform, UserStatusMap, Status, Cache } from '../core';
+import { Platform, UserStatusMap, Cache } from '../core';
 import { UserStatus } from '../models';
 
 const usersCache = new Cache(
@@ -53,7 +64,10 @@ export class UserStatusesController extends Controller {
   @Response(401, 'Authentication fail')
   @Security('reporterAuth')
   @Post('report')
-  public async report(@Body() report: UserStatus): Promise<void> {
-    await createNewReport(report);
+  public async report(
+    @Body() report: UserStatus,
+    @Header('Authorization') reporterKey: string
+  ): Promise<void> {
+    await createNewReport(report, reporterKey);
   }
 }

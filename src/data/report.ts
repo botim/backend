@@ -9,8 +9,8 @@ import { UserStatus } from '../models';
  * mark report as 'DUPLICATE'.
  * @param report Report to create.
  */
-export const createNewReport = async (report: UserStatus) => {
-  let initialStatus: Status = Status.REPORTED;
+export const createNewReport = async (report: UserStatus, reporterKey: string) => {
+  let status: Status = Status.REPORTED;
   const { platform, userId, postId, commentId, replyCommentId } = report;
 
   const userStatusRepository = getConnection().getRepository(UserStatus);
@@ -42,10 +42,10 @@ export const createNewReport = async (report: UserStatus) => {
     }
 
     /** Mark the report as 'DUPLICATE' */
-    initialStatus = Status.DUPLICATE;
+    status = Status.DUPLICATE;
   }
 
-  const userStatus = new UserStatus({ ...report, status: initialStatus });
+  const userStatus = new UserStatus({ ...report, status, reporterKey });
 
   await userStatusRepository.save(userStatus);
 };
