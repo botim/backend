@@ -1,7 +1,18 @@
-import { Body, Controller, Query, Get, Post, Response, Route, Security, Tags } from 'tsoa';
+import {
+  Body,
+  Controller,
+  Query,
+  Get,
+  Post,
+  Response,
+  Route,
+  Security,
+  Tags,
+  Put
+} from 'tsoa';
 
-import { getUserStatusMap, createNewReport } from '../data';
-import { Platform, UserStatusMap, Status, Cache } from '../core';
+import { getUserStatusMap, createNewReport, getUsers, updateUserStatus } from '../data';
+import { Platform, UserStatusMap, Status, Cache, UserUpdate } from '../core';
 import { UserStatus } from '../models';
 
 const usersCache = new Cache(
@@ -55,5 +66,33 @@ export class UserStatusesController extends Controller {
   @Post('report')
   public async report(@Body() report: UserStatus): Promise<void> {
     await createNewReport(report);
+  }
+
+  /**
+   * Get all bots as array.
+   */
+  @Response(501, 'Server error')
+  @Response(401, 'Authentication fail')
+  @Security('analystsAuth')
+  @Get()
+  public async getAllUsers(): Promise<UserStatus[]> {
+    return await getUsers();
+  }
+
+  /**
+   * Set bot status.
+   * @param userId Suspected bot to update status for.
+   * @param userUpdate The new status to set.
+   */
+  @Response(501, 'Server error')
+  @Response(401, 'Authentication fail')
+  @Security('analystsAuth')
+  @Put('{platfrom}/{userId}')
+  public async updateUser(
+    platfrom: Platform,
+    userId: string,
+    @Body() userUpdate: UserUpdate
+  ): Promise<void> {
+    await updateUserStatus(platfrom, userId, userUpdate.setStatus);
   }
 }

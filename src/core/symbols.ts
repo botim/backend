@@ -21,3 +21,7 @@ export enum Status {
 export interface UserStatusMap {
   [key: string]: Status;
 }
+
+export interface UserUpdate {
+  setStatus: Status;
+}

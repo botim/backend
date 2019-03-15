@@ -7,14 +7,16 @@ import { logger } from '../core';
 const { ALLOW_ANALYSTS_API } = process.env;
 const allowAnalystsAccess = ALLOW_ANALYSTS_API === 'true';
 if (!allowAnalystsAccess) {
+  logger.info('The analysts API are CLOSED.');
   console.info(
-    '\n------------------------NOTICE---------------------------------\n' +
+    '------------------------NOTICE---------------------------------\n' +
       '*             The analysts API are CLOSED.                    *\n' +
       '---------------------------------------------------------------\n'
   );
 } else {
+  logger.info('The analysts API are TOTALLY OPEN without any authentication.');
   console.warn(
-    '\n------------------------NOTICE----------------------------------\n' +
+    '------------------------NOTICE----------------------------------\n' +
       '* The analysts API are TOTALLY OPEN without any authentication,*\n' +
       '* Make sure the server runs on a closed network,               *\n' +
       '* Otherwise, anyone can manipulate data.                       *\n' +
