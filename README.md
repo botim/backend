@@ -53,6 +53,12 @@ The reports go to `user_statuses` table.
 
 And the reporters API key checks against `reporters` table.
 
+### Analysts dashboard
+
+Build the angular dashboard project. see [README](./dashboard/README.md).
+
+Run the backend with `ALLOW_ANALYSTS_API=true` and open browser in `localhost:8080/analysts`.
+
 ### Configuration
 
 environment variables:

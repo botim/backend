@@ -44,11 +44,11 @@ class App {
    */
   private _serveStatic() {
     /** In / path only serve the index.html file */
-    this.express.get('/', (req: express.Request, res: express.Response) =>
+    this.express.get('/analysts', (req: express.Request, res: express.Response) =>
       res.sendFile(path.join(__dirname, '/public/index.html'))
     );
     /** Get any file in public directory */
-    this.express.use('/static', express.static(path.join(__dirname, '/public/')));
+    this.express.use('/analysts', express.static(path.join(__dirname, '/public/')));
   }
 
   /**
