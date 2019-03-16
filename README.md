@@ -13,27 +13,28 @@ Deployed on Heroku
 Using postgres.
 Copy `.env.example` into `.env` and update the variables to match your environment, or define local variable named DATABASE_URL of the form `postgres://user:pass@localhost:5432/bots_db`
 
-Install locally by running:
+Install locally:
 
-```bash
-$ psql postgres
-CREATE ROLE bots WITH LOGIN PASSWORD 'yourpass';
-ALTER ROLE bots CREATEDB;
+1. Create Database and User:
 
-$ psql postgres -U bots
-CREATE DATABASE bots_db;
-GRANT ALL PRIVILEGES ON DATABASE bots_db TO bots;
-CREATE TYPE platform AS ENUM('TWITTER', 'FACEBOOK', 'INSTAGRAM');
-CREATE TYPE reason AS ENUM('BOT', 'VIOLENCE', 'FAKE');
-CREATE TYPE status AS ENUM('REPORTED', 'IN_PROCESS', 'BOT', 'NOT_BOT', 'DUPLICATE');
+   ```bash
+   $ psql postgres
+   CREATE ROLE bots WITH LOGIN PASSWORD 'yourpass';
+   ALTER ROLE bots CREATEDB;
 
-DROP TABLE IF EXISTS user_statuses;
-CREATE TABLE user_statuses (ID SERIAL PRIMARY KEY, platform platform NOT NULL, user_id VARCHAR(30) NOT NULL, post_id VARCHAR(30) NOT NULL, comment_id VARCHAR(30), reply_comment_id VARCHAR(30), reasons reason[] NOT NULL, status status NOT NULL, description VARCHAR(200), reporter_key VARCHAR(30) NOT NULL, unique (platform, user_id, post_id, comment_id, reply_comment_id));
+   $ psql postgres -U bots
+   CREATE DATABASE bots_db;
+   GRANT ALL PRIVILEGES ON DATABASE bots_db TO bots;
+   ```
 
-DROP TABLE IF EXISTS reporters;
-CREATE TABLE reporters (ID SERIAL PRIMARY KEY, platform platform, user_id VARCHAR(30), reporter_key VARCHAR(30) NOT NULL);
+2. Run migrations to create tables:
 
-```
+   ```bash
+   npm run migrate
+
+   # to revert the last migration
+   npm run migrate:revert
+   ```
 
 ### Run Example
 

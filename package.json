@@ -5,6 +5,9 @@
   "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js",
+    "migrate": "npm run typeorm -- migration:run",
+    "migrate:revert": "npm run typeorm -- migration:revert",
     "jscopy": "copyfiles -u 1 src/**/*.js dist",
     "build": "tsoa routes && tsc && npm run jscopy",
     "start": "node dist/index.js",
