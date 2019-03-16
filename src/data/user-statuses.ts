@@ -1,6 +1,6 @@
-import { In, Not } from 'typeorm';
+import { In, Not, getConnection } from 'typeorm';
 
-import { getConnection, UserStatusMap, Platform, Status } from '../core';
+import { UserStatusMap, Platform, Status } from '../core';
 import { UserStatus } from '../models';
 
 /** Get detection status for reported users only. */

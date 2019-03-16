@@ -31,7 +31,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^2.6.2",
     "tsoa": "^2.3.8",
-    "typeorm": "^0.2.14"
+    "typeorm": "^0.2.15"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",

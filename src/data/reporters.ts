@@ -1,4 +1,5 @@
-import { getConnection } from '../core';
+import { getConnection } from 'typeorm';
+
 import { Reporter } from '../models';
 
 export const checkReporterKey = async (reporterKey: string): Promise<boolean> => {

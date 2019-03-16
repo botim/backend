@@ -4,6 +4,7 @@ import * as cors from 'cors';
 import * as RateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import { sanitizeExpressMiddleware, sanitizeJsonSync } from 'generic-json-sanitizer';
+import { createConnection } from 'typeorm';
 
 import { logger } from './core';
 
@@ -31,8 +32,11 @@ class App {
     /** Route inner system */
     this._routes();
 
-    /** And never sent errors back to client. */
+    /** Never sent errors back to client. */
     this._catchErrors();
+
+    /** Connect to the database. */
+    this._initDatabase();
   }
 
   /**
@@ -133,6 +137,19 @@ class App {
         res.status(500).send();
       }
     );
+  }
+
+  /**
+   * Connect to the database, using the configuration in ormconfig.js
+   */
+  private async _initDatabase() {
+    try {
+      await createConnection();
+      logger.info('successfully connected to DB.');
+    } catch (error) {
+      logger.fatal('DB connection failed, exiting...', error);
+      process.exit();
+    }
   }
 }
 

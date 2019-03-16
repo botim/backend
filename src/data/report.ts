@@ -1,4 +1,6 @@
-import { getConnection, Status } from '../core';
+import { getConnection } from 'typeorm';
+
+import { Status } from '../core';
 import { UserStatus } from '../models';
 
 /**
