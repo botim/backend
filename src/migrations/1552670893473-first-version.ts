@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 import { generateEnumQuery, getEnumName } from '../core';
 
-export class CreateReportersTable1552670893473 implements MigrationInterface {
+export class FirstVersion1552670893473 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await this._createEnums(queryRunner);
     await this._createTables(queryRunner);
@@ -91,6 +91,12 @@ export class CreateReportersTable1552670893473 implements MigrationInterface {
             type: 'varchar',
             length: '30',
             isNullable: false
+          },
+          {
+            name: 'username',
+            type: 'varchar',
+            length: '30',
+            isNullable: true
           },
           {
             name: 'post_id',

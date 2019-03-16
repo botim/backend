@@ -13,6 +13,9 @@ export class UserStatus {
   @Column({ name: 'user_id', type: 'varchar', length: 30, nullable: false })
   public userId: string;
 
+  @Column({ type: 'varchar', length: 30, nullable: true })
+  public username?: string;
+
   @Column({ name: 'post_id', type: 'varchar', length: 30, nullable: false })
   public postId: string;
 
@@ -26,7 +29,7 @@ export class UserStatus {
   public reasons: Reason[];
 
   @Column({ type: 'enum', enum: Status, nullable: false })
-  public status: Status;
+  public status?: Status;
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   public description?: string;
