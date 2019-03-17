@@ -5,12 +5,14 @@
   "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js",
+    "migrate": "npm run typeorm -- migration:run",
+    "migrate:revert": "npm run typeorm -- migration:revert",
     "jscopy": "copyfiles -u 1 src/**/*.js dist",
-    "prepare": "tsoa routes && tsc && npm run jscopy",
-    "build": "npm run prepare",
+    "build": "tsoa routes && tsc && npm run jscopy",
     "start": "node dist/index.js",
-    "prepare:dev": "tsoa routes && tsoa swagger && tsc && npm run jscopy",
-    "start:dev": "npm run prepare:dev && node --inspect dist/index.js",
+    "build:dev": "tsoa routes && tsoa swagger && tsc && npm run jscopy",
+    "start:dev": "npm run build:dev && node --inspect dist/index.js",
     "format": "prettier --write \"src/**/*.{ts,json}\""
   },
   "dependencies": {
@@ -31,8 +33,9 @@
     "randomstring": "^1.1.5",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^2.6.2",
+    "ts-node": "^8.0.3",
     "tsoa": "^2.3.8",
-    "typeorm": "^0.2.14"
+    "typeorm": "^0.2.15"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
@@ -45,7 +48,6 @@
     "husky": "^1.3.1",
     "lint-staged": "^8.1.5",
     "prettier": "^1.16.4",
-    "ts-node": "^7.0.1",
     "typescript": "^3.3.3333"
   }
 }

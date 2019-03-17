@@ -1,6 +1,5 @@
 import * as express from 'express';
 
-import { AuthenticatedRequest } from '../models';
 import { checkReporterKey } from '../data';
 import { logger } from '../core';
 
@@ -25,7 +24,7 @@ if (!allowAnalystsAccess) {
 }
 
 /**
- * Cert Authentication middelwhere API.
+ * Cert Authentication middleware API.
  * the key should be the 'reporterKey' property in the body.
  */
 export const expressAuthentication = async (request: express.Request, scopes: string[]) => {
@@ -43,12 +42,9 @@ export const expressAuthentication = async (request: express.Request, scopes: st
   }
 
   if (scopes.indexOf('reporterAuth') !== -1) {
-    /** Make sure that there is a body, and the body contains the API key. */
-    const authenticatedRequest: AuthenticatedRequest = request.body;
-    if (authenticatedRequest && authenticatedRequest.reporterKey) {
-      if (await checkReporterKey(authenticatedRequest.reporterKey)) {
-        return;
-      }
+    const reporterKey = request.header('Authorization');
+    if (await checkReporterKey(reporterKey)) {
+      return;
     }
   }
 

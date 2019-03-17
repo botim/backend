@@ -1,12 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
 
-import { AuthenticatedRequest } from './authenticated-request.model';
-
 import { Platform, Status, Reason } from '../core';
 
 @Entity({ name: 'user_statuses' })
 @Unique(['platform', 'userId', 'postId', 'commentId', 'replyCommentId'])
-export class UserStatus extends AuthenticatedRequest {
+export class UserStatus {
   @PrimaryGeneratedColumn() private id: number;
 
   @Column({ type: 'enum', enum: Platform, nullable: false })
@@ -14,6 +12,9 @@ export class UserStatus extends AuthenticatedRequest {
 
   @Column({ name: 'user_id', type: 'varchar', length: 30, nullable: false })
   public userId: string;
+
+  @Column({ type: 'varchar', length: 30, nullable: true })
+  public username?: string;
 
   @Column({ name: 'post_id', type: 'varchar', length: 30, nullable: false })
   public postId: string;
@@ -28,14 +29,16 @@ export class UserStatus extends AuthenticatedRequest {
   public reasons: Reason[];
 
   @Column({ type: 'enum', enum: Status, nullable: false })
-  public status: Status;
+  public status?: Status;
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   public description?: string;
 
-  constructor(private userStatus?: Partial<UserStatus>) {
-    super(userStatus);
+  @Column({ name: 'reporter_key', type: 'varchar', length: 30, nullable: false })
+  // optional for the report route validations
+  public reporterKey?: string;
 
+  constructor(private userStatus?: Partial<UserStatus>) {
     if (userStatus) {
       Object.assign(this, userStatus);
     }
