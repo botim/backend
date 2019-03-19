@@ -30,19 +30,19 @@ Install locally:
 2. Run migrations to create tables:
 
    ```bash
-   npm run migrate
+   yarn migrate
 
    # to revert the last migration
-   npm run migrate:revert
+   yarn migrate:revert
    ```
 
 ### Run Example
 
 enter in command line:
 
-- `npm i`
+- `yarn`
 - `DATABASE_URL='postgres://user:pass@localhost:5432/bots_db'`
-- `npm run start`
+- `yarn start`
 
 ### API
 
