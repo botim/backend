@@ -10,7 +10,15 @@ Deployed on Heroku
 
 ### DB
 
-Using postgres.
+You could install [Postgres](https://www.postgresql.org/download/) directrly on your computer, or install [Docker](https://www.docker.com/products/docker-desktop) and then use the `docker-compose` to run the container:
+
+```bash
+docker-compose up
+
+# shutdown the container
+docker-compose down
+```
+
 Copy `.env.example` into `.env` and update the variables to match your environment, or define local variable named DATABASE_URL of the form `postgres://user:pass@localhost:5432/bots_db`
 
 Install locally:
