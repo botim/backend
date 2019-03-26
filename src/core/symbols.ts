@@ -21,3 +21,8 @@ export enum Status {
 export interface UserStatusMap {
   [key: string]: Status;
 }
+
+export interface LoginSchema {
+  username: string;
+  password: string;
+}
