@@ -18,7 +18,12 @@
         "name": "Authorization",
         "in": "header"
       },
-      "jwtAuth": {
+      "jwtUserAuth": {
+        "type": "apiKey",
+        "name": "jwt",
+        "in": "header"
+      },
+      "jwtSuperUserAuth": {
         "type": "apiKey",
         "name": "jwt",
         "in": "header"

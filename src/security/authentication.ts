@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
 
 import { checkReporterKey } from '../data';
-import { logger } from '../core';
+import { logger, SignedInfo, Scopes } from '../core';
 import { jwtSecret } from '../controllers/auth-controller';
 
 /**
@@ -17,19 +17,22 @@ export const expressAuthentication = async (request: express.Request, scopes: st
   }
 
   /** Handle JWT tokens */
-  if (scopes.indexOf('jwtAuth') !== -1) {
+  if (scopes.indexOf(Scopes.REPORTER_AUTH) !== -1) {
+    const reporterKey = request.header('Authorization');
+    if (await checkReporterKey(reporterKey)) {
+      return;
+    }
+  } else {
     const jwtToken = request.header('jwt');
 
     // TODO: check against a blacklist of valid token that should block.
-    const { username } = jwt.verify(jwtToken, jwtSecret) as { username: string };
-    request.user = username;
-    return;
-  }
+    const signedInfo = jwt.verify(jwtToken, jwtSecret) as SignedInfo;
 
-  /** Make sure that there is a body, and the body contains the API key. */
-  const reporterKey = request.header('Authorization');
-  if (await checkReporterKey(reporterKey)) {
-    return;
+    /** Allow access only if the scope of JWT match to one of the security scopes rule. */
+    if (scopes.indexOf(signedInfo.scope) !== -1) {
+      request.user = signedInfo.username;
+      return;
+    }
   }
 
   throw new Error('auth fail');

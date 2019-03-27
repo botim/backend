@@ -8,11 +8,12 @@ import {
   Route,
   Security,
   Tags,
-  Header
+  Header,
+  Put
 } from 'tsoa';
 
-import { getUserStatusMap, createNewReport } from '../data';
-import { Platform, UserStatusMap, Cache } from '../core';
+import { getUserStatusMap, createNewReport, getUsers, updateUserStatus } from '../data';
+import { Platform, UserStatusMap, Cache, UserUpdate } from '../core';
 import { UserStatus } from '../models';
 
 const usersCache = new Cache(
@@ -69,5 +70,33 @@ export class UserStatusesController extends Controller {
     @Header('Authorization') reporterKey: string
   ): Promise<void> {
     await createNewReport(report, reporterKey);
+  }
+
+  /**
+   * Get all bots as array.
+   */
+  @Response(501, 'Server error')
+  @Response(401, 'Authentication fail')
+  @Security('jwtUserAuth')
+  @Get('users')
+  public async getAllUsers(): Promise<UserStatus[]> {
+    return await getUsers();
+  }
+
+  /**
+   * Set bot status.
+   * @param userId Suspected bot to update status for.
+   * @param userUpdate The new status to set.
+   */
+  @Response(501, 'Server error')
+  @Response(401, 'Authentication fail')
+  @Security('jwtUserAuth')
+  @Put('users/{platfrom}/{userId}')
+  public async updateUser(
+    platfrom: Platform,
+    userId: string,
+    @Body() userUpdate: UserUpdate
+  ): Promise<void> {
+    await updateUserStatus(platfrom, userId, userUpdate.setStatus);
   }
 }

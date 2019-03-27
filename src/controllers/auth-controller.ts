@@ -14,7 +14,7 @@ import * as jwt from 'jsonwebtoken';
 import * as randomstring from 'randomstring';
 
 import { checkUserAccess } from '../data';
-import { LoginSchema } from '../core';
+import { LoginSchema, Scopes, SignedInfo } from '../core';
 import { User } from '../models';
 
 export const jwtSecret = process.env.JWT_SECRET || randomstring.generate(64);
@@ -34,8 +34,9 @@ export class AuthController extends Controller {
     if (await checkUserAccess(new User(loginSchema))) {
       return jwt.sign(
         {
-          username: loginSchema.username
-        },
+          username: loginSchema.username,
+          scope: Scopes.JWT_USER_AUTH
+        } as SignedInfo,
         jwtSecret,
         { expiresIn: jwtExpiresIn }
       );
