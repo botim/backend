@@ -7,7 +7,7 @@ export class User {
   @Column({ type: 'varchar', length: 30, nullable: false })
   public username: string;
 
-  /** Passwords should be encrypted using SHA512 */
+  /** Passwords should be encrypted using 'bcrypt' */
   @Column({ type: 'varchar', length: 128, nullable: false })
   public password: string;
 

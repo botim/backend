@@ -10,7 +10,6 @@ import {
   Tags,
   Header
 } from 'tsoa';
-import * as cryptoJs from 'crypto-js';
 import * as jwt from 'jsonwebtoken';
 import * as randomstring from 'randomstring';
 
@@ -32,8 +31,6 @@ export class AuthController extends Controller {
   @Response(401, 'Authentication fail')
   @Post('login')
   public async login(@Body() loginSchema: LoginSchema): Promise<string> {
-    loginSchema.password = cryptoJs.SHA512(loginSchema.password).toString();
-
     if (await checkUserAccess(new User(loginSchema))) {
       return jwt.sign(
         {
