@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
+import { BeforeInsert, Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
 
 import { Platform, Status, Reason } from '../core';
 
@@ -38,9 +38,20 @@ export class UserStatus {
   // optional for the report route validations
   public reporterKey?: string;
 
+  /** UTC timestamp */
+  @Column({ name: 'reported_at', type: 'bigint', nullable: false })
+  // optional for the report route validations
+  public reportedAt?: number;
+
   constructor(private userStatus?: Partial<UserStatus>) {
     if (userStatus) {
       Object.assign(this, userStatus);
     }
+  }
+
+  @BeforeInsert()
+  public beforeInsert() {
+    /** Set report timestamp */
+    this.reportedAt = new Date().getTime();
   }
 }
