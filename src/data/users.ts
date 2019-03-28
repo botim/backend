@@ -19,5 +19,7 @@ export const checkUserAccess = async (user: User): Promise<User> => {
 
   const comparePasswords = await bcrypt.compare(password, userAccount.password);
 
+  delete userAccount.password;
+
   return comparePasswords ? userAccount : null;
 };
