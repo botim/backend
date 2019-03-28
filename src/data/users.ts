@@ -3,15 +3,21 @@ import * as bcrypt from 'bcrypt';
 
 import { User } from '../models';
 
-export const checkUserAccess = async (user: User): Promise<boolean> => {
+export const checkUserAccess = async (user: User): Promise<User> => {
   const { username, password } = user;
 
   const usersRepository = getConnection().getRepository(User);
-  const userAccount = await usersRepository.findOne({ username });
+  const userAccount = await usersRepository
+    .createQueryBuilder('user')
+    .addSelect('user.password')
+    .where('user.username = :username', { username })
+    .getOne();
 
-  if (userAccount) {
-    return await bcrypt.compare(password, userAccount.password);
+  if (!userAccount) {
+    return null;
   }
 
-  return false;
+  const comparePasswords = await bcrypt.compare(password, userAccount.password);
+
+  return comparePasswords ? userAccount : null;
 };
