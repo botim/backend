@@ -53,14 +53,7 @@ export const getUsers = async (): Promise<UserStatus[]> => {
 };
 
 /** Update user status */
-export const updateUserStatus = async (
-  platform: Platform,
-  userId: string,
-  setStatus: Status
-) => {
+export const updateUserStatus = async (platform: Platform, userId: string, status: Status) => {
   const botRepository = getConnection().getRepository(UserStatus);
-  await botRepository.update(
-    { userId, platform, status: Not(Status.DUPLICATE) },
-    { status: setStatus }
-  );
+  await botRepository.update({ userId, platform, status: Not(Status.DUPLICATE) }, { status });
 };

@@ -37,7 +37,7 @@ export class AuthController extends Controller {
       );
     }
 
-    /** TEMP, the TSOA not allowed to edit response code without throwing an error. */
+    /** TODO: TEMP, the TSOA not allowed to edit response code without throwing an error. */
     return '401';
   }
 }

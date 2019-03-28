@@ -91,12 +91,12 @@ export class UserStatusesController extends Controller {
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Security('jwtUserAuth')
-  @Put('users/{platfrom}/{userId}')
+  @Put('users/{platform}/{userId}')
   public async updateUser(
-    platfrom: Platform,
+    platform: Platform,
     userId: string,
     @Body() userUpdate: UserUpdate
   ): Promise<void> {
-    await updateUserStatus(platfrom, userId, userUpdate.setStatus);
+    await updateUserStatus(platform, userId, userUpdate.setStatus);
   }
 }
