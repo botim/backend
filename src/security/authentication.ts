@@ -4,6 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import { checkReporterKey } from '../data';
 import { logger, SignedInfo, Scopes } from '../core';
 import { jwtSecret } from '../controllers/auth-controller';
+import { TOKEN_HEADER, TOKEN_HEADER_PREFIX } from '../core/config';
 
 /**
  * Cert Authentication middleware API.
@@ -18,12 +19,12 @@ export const expressAuthentication = async (request: express.Request, scopes: st
 
   /** Handle JWT tokens */
   if (scopes.indexOf(Scopes.REPORTER_AUTH) !== -1) {
-    const reporterKey = request.header('Authorization');
+    const reporterKey = request.header(TOKEN_HEADER);
     if (await checkReporterKey(reporterKey)) {
       return;
     }
   } else {
-    const jwtToken = request.header('jwt');
+    const jwtToken = request.header(TOKEN_HEADER).replace(TOKEN_HEADER_PREFIX, '');
 
     // TODO: check against a blacklist of valid token that should block.
     const signedInfo = jwt.verify(jwtToken, jwtSecret) as SignedInfo;
