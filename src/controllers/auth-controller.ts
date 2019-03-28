@@ -25,19 +25,22 @@ export class AuthController extends Controller {
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Post('login')
-  public async login(@Body() loginSchema: LoginSchema): Promise<string> {
-    if (await checkUserAccess(new User(loginSchema))) {
-      return jwt.sign(
-        {
-          username: loginSchema.username,
-          scope: Scopes.JWT_USER_AUTH
-        } as SignedInfo,
-        jwtSecret,
-        { expiresIn: jwtExpiresIn }
-      );
+  public async login(@Body() loginSchema: LoginSchema): Promise<any> {
+    const user = await checkUserAccess(new User(loginSchema));
+
+    if (!user) {
+      return this.setStatus(401);
     }
 
-    /** TODO: TEMP, the TSOA not allowed to edit response code without throwing an error. */
-    return '401';
+    const token = jwt.sign(
+      {
+        username: loginSchema.username,
+        scope: Scopes.JWT_USER_AUTH
+      } as SignedInfo,
+      jwtSecret,
+      { expiresIn: jwtExpiresIn }
+    );
+
+    return { token, user };
   }
 }
