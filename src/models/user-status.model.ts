@@ -39,8 +39,8 @@ export class UserStatus {
   public reporterKey?: string;
 
   @CreateDateColumn({ name: 'reported_at', nullable: false })
-  public reportedAt?: Date;
   // optional for the report route validations
+  public reportedAt?: Date;
 
   constructor(private userStatus?: Partial<UserStatus>) {
     if (userStatus) {
