@@ -45,3 +45,15 @@ export const getUserStatusMap = async (
 
   return userStatusMap;
 };
+
+/** Get all bots in system. */
+export const getUsers = async (): Promise<UserStatus[]> => {
+  const botRepository = getConnection().getRepository(UserStatus);
+  return await botRepository.find();
+};
+
+/** Update user status */
+export const updateUserStatus = async (platform: Platform, userId: string, status: Status) => {
+  const botRepository = getConnection().getRepository(UserStatus);
+  await botRepository.update({ userId, platform, status: Not(Status.DUPLICATE) }, { status });
+};

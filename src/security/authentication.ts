@@ -1,7 +1,9 @@
 import * as express from 'express';
+import * as jwt from 'jsonwebtoken';
 
 import { checkReporterKey } from '../data';
-import { logger } from '../core';
+import { logger, SignedInfo, Scopes } from '../core';
+import { jwtSecret } from '../controllers/auth-controller';
 
 /**
  * Cert Authentication middleware API.
@@ -14,10 +16,23 @@ export const expressAuthentication = async (request: express.Request, scopes: st
     throw new Error('scope check fail');
   }
 
-  /** Make sure that there is a body, and the body contains the API key. */
-  const reporterKey = request.header('Authorization');
-  if (await checkReporterKey(reporterKey)) {
-    return;
+  /** Handle JWT tokens */
+  if (scopes.indexOf(Scopes.REPORTER_AUTH) !== -1) {
+    const reporterKey = request.header('Authorization');
+    if (await checkReporterKey(reporterKey)) {
+      return;
+    }
+  } else {
+    const jwtToken = request.header('jwt');
+
+    // TODO: check against a blacklist of valid token that should block.
+    const signedInfo = jwt.verify(jwtToken, jwtSecret) as SignedInfo;
+
+    /** Allow access only if the scope of JWT match to one of the security scopes rule. */
+    if (scopes.indexOf(signedInfo.scope) !== -1) {
+      request.user = signedInfo.username;
+      return;
+    }
   }
 
   throw new Error('auth fail');

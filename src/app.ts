@@ -11,6 +11,7 @@ import { logger } from './core';
 import { RegisterRoutes } from './routers/routes';
 
 // controllers need to be referenced in order to get crawled by the TSOA generator
+import './controllers/auth-controller';
 import './controllers/user-statuses-controller';
 
 class App {

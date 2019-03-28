@@ -15,7 +15,17 @@
     "securityDefinitions": {
       "reporterAuth": {
         "type": "apiKey",
-        "name": "Cookie",
+        "name": "Authorization",
+        "in": "header"
+      },
+      "jwtUserAuth": {
+        "type": "apiKey",
+        "name": "jwt",
+        "in": "header"
+      },
+      "jwtSuperUserAuth": {
+        "type": "apiKey",
+        "name": "jwt",
         "in": "header"
       }
     },

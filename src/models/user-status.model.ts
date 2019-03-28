@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn } from 'typeorm';
 
 import { Platform, Status, Reason } from '../core';
 
@@ -37,6 +37,10 @@ export class UserStatus {
   @Column({ name: 'reporter_key', type: 'varchar', length: 30, nullable: false })
   // optional for the report route validations
   public reporterKey?: string;
+
+  @CreateDateColumn({ name: 'reported_at', nullable: false })
+  // optional for the report route validations
+  public reportedAt?: Date;
 
   constructor(private userStatus?: Partial<UserStatus>) {
     if (userStatus) {

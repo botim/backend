@@ -18,6 +18,26 @@ export enum Status {
   DUPLICATE = 'DUPLICATE'
 }
 
+export enum Scopes {
+  REPORTER_AUTH = 'reporterAuth',
+  JWT_USER_AUTH = 'jwtUserAuth',
+  JWT_SUPER_USER_AUTH = 'jwtSuperUserAuth'
+}
+
 export interface UserStatusMap {
   [key: string]: Status;
+}
+
+export interface LoginSchema {
+  username: string;
+  password: string;
+}
+
+export interface SignedInfo {
+  username: string;
+  scope: Scopes;
+}
+
+export interface UserUpdate {
+  setStatus: Status;
 }

@@ -34,7 +34,7 @@ Install locally:
    CREATE DATABASE bots_db;
    GRANT ALL PRIVILEGES ON DATABASE bots_db TO bots;
    ```
-
+   
 2. Run migrations to create tables:
 
    ```bash
@@ -71,3 +71,5 @@ environment variables:
 - `REQUESTS_LIMIT` Maximum requests in 10 minutes window per IP. (default 1000).
 - `USERS_CACHE_TTL` Liveness of a user status cache, in seconds. (default 1 second).
 - `USERS_CACHE_CHECK_PERIOD` Interval of cache liveness check. (default 0).
+- `JWT_SECRET` JWT private stamp key. (default random).
+- `JWT_EXPIRES_IN` The JWT token liveness time duration. (default 2 days).
