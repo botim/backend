@@ -14,9 +14,9 @@ export class AddReportTimestamp1553657266252 implements MigrationInterface {
       'user_statuses',
       new TableColumn({
         name: 'reported_at',
-        type: 'bigint',
+        type: 'timestamp',
         isNullable: false,
-        default: 0
+        default: 'now()'
       })
     );
   }
