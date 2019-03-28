@@ -1,24 +1,19 @@
-import {
-  Body,
-  Controller,
-  Query,
-  Get,
-  Post,
-  Response,
-  Route,
-  Security,
-  Tags,
-  Header
-} from 'tsoa';
+import { Body, Controller, Post, Response, Route, Tags } from 'tsoa';
 import * as jwt from 'jsonwebtoken';
-import * as randomstring from 'randomstring';
 
 import { checkUserAccess } from '../data';
 import { LoginSchema, Scopes, SignedInfo } from '../core';
 import { User } from '../models';
 
-export const jwtSecret = process.env.JWT_SECRET || randomstring.generate(64);
+export const jwtSecret = process.env.JWT_SECRET;
 const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '2 days';
+
+// TODO: move this check to some other place?
+if (!jwtSecret) {
+  console.error('You must set the jwt secret!');
+
+  process.exit();
+}
 
 @Tags('Auth')
 @Route('/auth')
