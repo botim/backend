@@ -19,9 +19,9 @@ export enum Status {
 }
 
 export enum Scopes {
-  REPORTER_AUTH = 'reporterAuth',
-  JWT_USER_AUTH = 'jwtUserAuth',
-  JWT_SUPER_USER_AUTH = 'jwtSuperUserAuth'
+  REPORTER = 'REPORTER',
+  ADMIN = 'ADMIN',
+  SUPER_USER = 'SUPER_USER'
 }
 
 export interface UserStatusMap {

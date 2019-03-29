@@ -19,7 +19,7 @@ import {
   getSpecificUserStatuses,
   updateUserStatus
 } from '../data';
-import { Platform, UserStatusMap, Cache, UserUpdate } from '../core';
+import { Platform, UserStatusMap, Cache, UserUpdate, Scopes } from '../core';
 import { UserStatus, Pagination } from '../models';
 
 const usersCache = new Cache(
@@ -69,7 +69,7 @@ export class UserStatusesController extends Controller {
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
-  @Security('reporterAuth')
+  @Security('REPORTER')
   @Post('report')
   public async report(
     @Body() report: UserStatus,
@@ -84,19 +84,20 @@ export class UserStatusesController extends Controller {
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
-  @Security('jwtUserAuth')
+  @Security('ADMIN')
   @Get('statuses')
   public async getUserStatuses(@Query() pageIndex: number = 0): Promise<Pagination> {
     return await getUserStatuses(pageIndex);
   }
 
+  // TODO: maybe not needed
   /**
    * Get all reports that not classified yet, as an array, page by page.
    * @param pageIndex Page index.
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
-  @Security('jwtUserAuth')
+  @Security('ADMIN')
   @Get('statuses/unclassified')
   public async getUnclassifiedUserStatuses(
     @Query() pageIndex: number = 0
@@ -111,7 +112,7 @@ export class UserStatusesController extends Controller {
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
-  @Security('jwtUserAuth')
+  @Security('ADMIN')
   @Get('statuses/{platform}/{userId}')
   public async getUserReports(platform: Platform, userId: string): Promise<UserStatus[]> {
     return await getSpecificUserStatuses(platform, userId);
@@ -125,7 +126,7 @@ export class UserStatusesController extends Controller {
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
-  @Security('jwtUserAuth')
+  @Security('ADMIN')
   @Put('statuses/{platform}/{userId}')
   public async updateUser(
     platform: Platform,

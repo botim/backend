@@ -18,7 +18,7 @@ export const expressAuthentication = async (request: express.Request, scopes: st
   }
 
   /** Handle JWT tokens */
-  if (scopes.indexOf(Scopes.REPORTER_AUTH) !== -1) {
+  if (scopes.indexOf(Scopes.REPORTER) !== -1) {
     const reporterKey = request.header(TOKEN_HEADER);
     if (await checkReporterKey(reporterKey)) {
       return;

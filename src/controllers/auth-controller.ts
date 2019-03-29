@@ -35,7 +35,7 @@ export class AuthController extends Controller {
     const token = jwt.sign(
       {
         username: loginSchema.username,
-        scope: Scopes.JWT_USER_AUTH
+        scope: Scopes.ADMIN
       } as SignedInfo,
       jwtSecret,
       { expiresIn: jwtExpiresIn }

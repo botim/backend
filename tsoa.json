@@ -13,17 +13,17 @@
     "name": "Botim - extension backend",
     "description": "",
     "securityDefinitions": {
-      "reporterAuth": {
+      "REPORTER": {
         "type": "apiKey",
         "name": "Authorization",
         "in": "header"
       },
-      "jwtUserAuth": {
+      "ADMIN": {
         "type": "apiKey",
         "name": "Authorization",
         "in": "header"
       },
-      "jwtSuperUserAuth": {
+      "SUPER_USER": {
         "type": "apiKey",
         "name": "Authorization",
         "in": "header"
