@@ -20,12 +20,12 @@
       },
       "jwtUserAuth": {
         "type": "apiKey",
-        "name": "jwt",
+        "name": "Authorization",
         "in": "header"
       },
       "jwtSuperUserAuth": {
         "type": "apiKey",
-        "name": "jwt",
+        "name": "Authorization",
         "in": "header"
       }
     },
