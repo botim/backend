@@ -21,7 +21,7 @@ import {
   updateUserStatus
 } from '../data';
 import { Platform, UserStatusMap, Cache, UserUpdate } from '../core';
-import { UserStatus } from '../models';
+import { UserStatus, UsersStatusPage } from '../models';
 
 const usersCache = new Cache(
   +process.env.USERS_CACHE_TTL || 1,
@@ -87,7 +87,7 @@ export class UserStatusesController extends Controller {
   @Response(401, 'Authentication fail')
   @Security('jwtUserAuth')
   @Get('users')
-  public async getAllUsers(@Query() pageIndex: number = 0): Promise<UserStatus[]> {
+  public async getAllUsers(@Query() pageIndex: number = 0): Promise<UsersStatusPage> {
     return await getUsersPage(pageIndex);
   }
 
@@ -99,7 +99,7 @@ export class UserStatusesController extends Controller {
   @Response(401, 'Authentication fail')
   @Security('jwtUserAuth')
   @Get('users/unclassified')
-  public async getUnclassifiedUsers(@Query() pageIndex: number = 0): Promise<UserStatus[]> {
+  public async getUnclassifiedUsers(@Query() pageIndex: number = 0): Promise<UsersStatusPage> {
     return await getUnclassifiedUsersPage(pageIndex);
   }
 

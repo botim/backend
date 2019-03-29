@@ -1,7 +1,7 @@
 import { In, Not, getConnection } from 'typeorm';
 
 import { UserStatusMap, Platform, Status } from '../core';
-import { UserStatus } from '../models';
+import { UserStatus, UsersStatusPage } from '../models';
 import { MAX_PAGE_REPORTS } from '../core/config';
 
 /** Get detection status for reported users only. */
@@ -48,9 +48,9 @@ export const getUserStatusMap = async (
 };
 
 /** Get reports page. */
-export const getUsersPage = async (page: number): Promise<UserStatus[]> => {
+export const getUsersPage = async (page: number): Promise<UsersStatusPage> => {
   const botRepository = getConnection().getRepository(UserStatus);
-  const usersStatuses = await botRepository.find({
+  const [reports, total] = await botRepository.findAndCount({
     take: MAX_PAGE_REPORTS,
     skip: page * MAX_PAGE_REPORTS,
     where: {
@@ -60,13 +60,13 @@ export const getUsersPage = async (page: number): Promise<UserStatus[]> => {
       reportedAt: 'DESC'
     }
   });
-  return usersStatuses;
+  return new UsersStatusPage(reports, total);
 };
 
 /** Get unclassified reports page. */
-export const getUnclassifiedUsersPage = async (page: number): Promise<UserStatus[]> => {
+export const getUnclassifiedUsersPage = async (page: number): Promise<UsersStatusPage> => {
   const botRepository = getConnection().getRepository(UserStatus);
-  const usersStatuses = await botRepository.find({
+  const [reports, total] = await botRepository.findAndCount({
     take: MAX_PAGE_REPORTS,
     skip: page * MAX_PAGE_REPORTS,
     order: {
@@ -77,7 +77,7 @@ export const getUnclassifiedUsersPage = async (page: number): Promise<UserStatus
     }
   });
 
-  return usersStatuses;
+  return new UsersStatusPage(reports, total);
 };
 
 /** Get all reports of a user. */
