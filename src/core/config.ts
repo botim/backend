@@ -1,3 +1,3 @@
 export const TOKEN_HEADER = 'Authorization';
 export const TOKEN_HEADER_PREFIX = 'Bearer ';
-export const MAX_PAGE_REPORTS = 25;
+export const ITEMS_PER_PAGE = 25;

@@ -1,8 +1,8 @@
 import { In, Not, getConnection } from 'typeorm';
 
 import { UserStatusMap, Platform, Status } from '../core';
-import { UserStatus, UsersStatusPage } from '../models';
-import { MAX_PAGE_REPORTS } from '../core/config';
+import { UserStatus, Pagination } from '../models';
+import { ITEMS_PER_PAGE } from '../core/config';
 
 /** Get detection status for reported users only. */
 export const getUserStatusOnlyMap = async (
@@ -48,40 +48,29 @@ export const getUserStatusMap = async (
 };
 
 /** Get reports page. */
-export const getUsersPage = async (page: number): Promise<UsersStatusPage> => {
+export const getUserStatuses = async (
+  page: number,
+  showUnclassified?: boolean
+): Promise<Pagination> => {
   const botRepository = getConnection().getRepository(UserStatus);
   const [reports, total] = await botRepository.findAndCount({
-    take: MAX_PAGE_REPORTS,
-    skip: page * MAX_PAGE_REPORTS,
+    take: ITEMS_PER_PAGE,
+    skip: page * ITEMS_PER_PAGE,
     where: {
-      status: Not(Status.DUPLICATE)
+      status: showUnclassified
+        ? In([Status.REPORTED, Status.IN_PROCESS])
+        : Not(Status.DUPLICATE)
     },
     order: {
       reportedAt: 'DESC'
     }
   });
-  return new UsersStatusPage(reports, total);
-};
 
-/** Get unclassified reports page. */
-export const getUnclassifiedUsersPage = async (page: number): Promise<UsersStatusPage> => {
-  const botRepository = getConnection().getRepository(UserStatus);
-  const [reports, total] = await botRepository.findAndCount({
-    take: MAX_PAGE_REPORTS,
-    skip: page * MAX_PAGE_REPORTS,
-    order: {
-      reportedAt: 'DESC'
-    },
-    where: {
-      status: In([Status.REPORTED, Status.IN_PROCESS])
-    }
-  });
-
-  return new UsersStatusPage(reports, total);
+  return new Pagination(reports, total);
 };
 
 /** Get all reports of a user. */
-export const getUserReports = async (
+export const getSpecificUserStatuses = async (
   platform: Platform,
   userId: string
 ): Promise<UserStatus[]> => {

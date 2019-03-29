@@ -15,13 +15,12 @@ import {
 import {
   getUserStatusMap,
   createNewReport,
-  getUsersPage,
-  getUnclassifiedUsersPage,
-  getUserReports,
+  getUserStatuses,
+  getSpecificUserStatuses,
   updateUserStatus
 } from '../data';
 import { Platform, UserStatusMap, Cache, UserUpdate } from '../core';
-import { UserStatus, UsersStatusPage } from '../models';
+import { UserStatus, Pagination } from '../models';
 
 const usersCache = new Cache(
   +process.env.USERS_CACHE_TTL || 1,
@@ -86,9 +85,9 @@ export class UserStatusesController extends Controller {
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Security('jwtUserAuth')
-  @Get('users')
-  public async getAllUsers(@Query() pageIndex: number = 0): Promise<UsersStatusPage> {
-    return await getUsersPage(pageIndex);
+  @Get('statuses')
+  public async getUserStatuses(@Query() pageIndex: number = 0): Promise<Pagination> {
+    return await getUserStatuses(pageIndex);
   }
 
   /**
@@ -98,9 +97,11 @@ export class UserStatusesController extends Controller {
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Security('jwtUserAuth')
-  @Get('users/unclassified')
-  public async getUnclassifiedUsers(@Query() pageIndex: number = 0): Promise<UsersStatusPage> {
-    return await getUnclassifiedUsersPage(pageIndex);
+  @Get('statuses/unclassified')
+  public async getUnclassifiedUserStatuses(
+    @Query() pageIndex: number = 0
+  ): Promise<Pagination> {
+    return await getUserStatuses(pageIndex, true);
   }
 
   /**
@@ -111,9 +112,9 @@ export class UserStatusesController extends Controller {
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Security('jwtUserAuth')
-  @Get('users/{platform}/{userId}')
+  @Get('statuses/{platform}/{userId}')
   public async getUserReports(platform: Platform, userId: string): Promise<UserStatus[]> {
-    return await getUserReports(platform, userId);
+    return await getSpecificUserStatuses(platform, userId);
   }
 
   /**
@@ -125,7 +126,7 @@ export class UserStatusesController extends Controller {
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Security('jwtUserAuth')
-  @Put('users/{platform}/{userId}')
+  @Put('statuses/{platform}/{userId}')
   public async updateUser(
     platform: Platform,
     userId: string,

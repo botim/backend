@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn } from 'typeorm';
 
 import { Platform, Status, Reason } from '../core';
-import { MAX_PAGE_REPORTS } from '../core/config';
+import { ITEMS_PER_PAGE } from '../core/config';
 
 @Entity({ name: 'user_statuses' })
 @Unique(['platform', 'userId', 'postId', 'commentId', 'replyCommentId'])
@@ -47,12 +47,5 @@ export class UserStatus {
     if (userStatus) {
       Object.assign(this, userStatus);
     }
-  }
-}
-
-export class UsersStatusPage {
-  public maxPageReports: number;
-  constructor(public reports: UserStatus[], public totalReports: number) {
-    this.maxPageReports = MAX_PAGE_REPORTS;
   }
 }
