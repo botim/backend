@@ -2,7 +2,7 @@ import { In, Not, getConnection } from 'typeorm';
 
 import { UserStatusMap, Platform, Status } from '../core';
 import { UserStatus, Pagination } from '../models';
-import { ITEMS_PER_PAGE } from '../core/config';
+import { PAGINATION_ITEMS_PER_PAGE } from '../core/config';
 
 /** Get detection status for reported users only. */
 export const getUserStatusOnlyMap = async (
@@ -54,8 +54,8 @@ export const getUserStatuses = async (
 ): Promise<Pagination> => {
   const botRepository = getConnection().getRepository(UserStatus);
   const [reports, total] = await botRepository.findAndCount({
-    take: ITEMS_PER_PAGE,
-    skip: page * ITEMS_PER_PAGE,
+    take: PAGINATION_ITEMS_PER_PAGE,
+    skip: page * PAGINATION_ITEMS_PER_PAGE,
     where: {
       status: showUnclassified
         ? In([Status.REPORTED, Status.IN_PROCESS])

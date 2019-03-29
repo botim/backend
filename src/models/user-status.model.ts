@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn } from 'typeorm';
 
 import { Platform, Status, Reason } from '../core';
-import { ITEMS_PER_PAGE } from '../core/config';
 
 @Entity({ name: 'user_statuses' })
 @Unique(['platform', 'userId', 'postId', 'commentId', 'replyCommentId'])

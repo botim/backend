@@ -1,11 +1,10 @@
-import { ITEMS_PER_PAGE } from '../core/config';
+import { PAGINATION_ITEMS_PER_PAGE } from '../core/config';
 
-import { UserStatus } from './user-status.model';
-
+// TODO: currently, can't be generic because of tsoa (hence the any[])
 export class Pagination {
-  public itemsPerPage: number;
+  public perPage: number;
 
-  constructor(public userStatuses: UserStatus[], public total: number) {
-    this.itemsPerPage = ITEMS_PER_PAGE;
+  constructor(public items: any[], public total: number) {
+    this.perPage = PAGINATION_ITEMS_PER_PAGE;
   }
 }
