@@ -2,6 +2,7 @@ import { In, Not, getConnection } from 'typeorm';
 
 import { UserStatusMap, Platform, Status } from '../core';
 import { UserStatus } from '../models';
+import { MAX_PAGE_REPORTS } from '../core/config';
 
 /** Get detection status for reported users only. */
 export const getUserStatusOnlyMap = async (
@@ -46,10 +47,56 @@ export const getUserStatusMap = async (
   return userStatusMap;
 };
 
-/** Get all bots in system. */
-export const getUsers = async (): Promise<UserStatus[]> => {
+/** Get reports page. */
+export const getUsersPage = async (page: number): Promise<UserStatus[]> => {
   const botRepository = getConnection().getRepository(UserStatus);
-  return await botRepository.find();
+  const usersStatuses = await botRepository.find({
+    take: MAX_PAGE_REPORTS,
+    skip: page * MAX_PAGE_REPORTS,
+    where: {
+      status: Not(Status.DUPLICATE)
+    },
+    order: {
+      reportedAt: 'DESC'
+    }
+  });
+  return usersStatuses;
+};
+
+/** Get unclassified reports page. */
+export const getUnclassifiedUsersPage = async (page: number): Promise<UserStatus[]> => {
+  const botRepository = getConnection().getRepository(UserStatus);
+  const usersStatuses = await botRepository.find({
+    take: MAX_PAGE_REPORTS,
+    skip: page * MAX_PAGE_REPORTS,
+    order: {
+      reportedAt: 'DESC'
+    },
+    where: {
+      status: In([Status.REPORTED, Status.IN_PROCESS])
+    }
+  });
+
+  return usersStatuses;
+};
+
+/** Get all reports of a user. */
+export const getUserReports = async (
+  platform: Platform,
+  userId: string
+): Promise<UserStatus[]> => {
+  const botRepository = getConnection().getRepository(UserStatus);
+  const userReports = await botRepository.find({
+    order: {
+      reportedAt: 'ASC'
+    },
+    where: {
+      platform,
+      userId
+    }
+  });
+
+  return userReports;
 };
 
 /** Update user status */

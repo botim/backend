@@ -12,7 +12,14 @@ import {
   Put
 } from 'tsoa';
 
-import { getUserStatusMap, createNewReport, getUsers, updateUserStatus } from '../data';
+import {
+  getUserStatusMap,
+  createNewReport,
+  getUsersPage,
+  getUnclassifiedUsersPage,
+  getUserReports,
+  updateUserStatus
+} from '../data';
 import { Platform, UserStatusMap, Cache, UserUpdate } from '../core';
 import { UserStatus } from '../models';
 
@@ -73,19 +80,46 @@ export class UserStatusesController extends Controller {
   }
 
   /**
-   * Get all bots as array.
+   * Get all reports as an array, page by page.
+   * @param pageIndex Page index.
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Security('jwtUserAuth')
   @Get('users')
-  public async getAllUsers(): Promise<UserStatus[]> {
-    return await getUsers();
+  public async getAllUsers(@Query() pageIndex: number = 0): Promise<UserStatus[]> {
+    return await getUsersPage(pageIndex);
+  }
+
+  /**
+   * Get all reports that not classified yet, as an array, page by page.
+   * @param pageIndex Page index.
+   */
+  @Response(501, 'Server error')
+  @Response(401, 'Authentication fail')
+  @Security('jwtUserAuth')
+  @Get('users/unclassified')
+  public async getUnclassifiedUsers(@Query() pageIndex: number = 0): Promise<UserStatus[]> {
+    return await getUnclassifiedUsersPage(pageIndex);
+  }
+
+  /**
+   * Get reported user reports. (Original report and all duplicates).
+   * @param platform Reported user platform.
+   * @param userId Reported user id.
+   */
+  @Response(501, 'Server error')
+  @Response(401, 'Authentication fail')
+  @Security('jwtUserAuth')
+  @Get('users/{platform}/{userId}')
+  public async getUserReports(platform: Platform, userId: string): Promise<UserStatus[]> {
+    return await getUserReports(platform, userId);
   }
 
   /**
    * Set bot status.
-   * @param userId Suspected bot to update status for.
+   * @param platform Suspected bot platform.
+   * @param userId Suspected bot id, to update status for.
    * @param userUpdate The new status to set.
    */
   @Response(501, 'Server error')
