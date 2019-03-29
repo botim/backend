@@ -49,11 +49,13 @@ export const getUserStatusMap = async (
 
 /** Get reports page. */
 export const getUserStatuses = async (
-  page: number,
+  page: number = 0,
+  order: string = 'reportedAt',
+  sort: string = 'ASC',
   showUnclassified?: boolean
 ): Promise<Pagination> => {
   const botRepository = getConnection().getRepository(UserStatus);
-  const [reports, total] = await botRepository.findAndCount({
+  const [items, total] = await botRepository.findAndCount({
     take: PAGINATION_ITEMS_PER_PAGE,
     skip: page * PAGINATION_ITEMS_PER_PAGE,
     where: {
@@ -62,11 +64,11 @@ export const getUserStatuses = async (
         : Not(Status.DUPLICATE)
     },
     order: {
-      reportedAt: 'DESC'
+      [order]: sort.toUpperCase()
     }
   });
 
-  return new Pagination(reports, total);
+  return new Pagination(items, total);
 };
 
 /** Get all reports of a user. */

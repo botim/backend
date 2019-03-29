@@ -19,7 +19,7 @@ import {
   getSpecificUserStatuses,
   updateUserStatus
 } from '../data';
-import { Platform, UserStatusMap, Cache, UserUpdate, Scopes } from '../core';
+import { Platform, UserStatusMap, Cache, UserUpdate } from '../core';
 import { UserStatus, Pagination } from '../models';
 
 const usersCache = new Cache(
@@ -80,29 +80,35 @@ export class UserStatusesController extends Controller {
 
   /**
    * Get all reports as an array, page by page.
-   * @param pageIndex Page index.
+   * @param page Page index.
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Security('ADMIN')
   @Get('statuses')
-  public async getUserStatuses(@Query() pageIndex: number = 0): Promise<Pagination> {
-    return await getUserStatuses(pageIndex);
+  public async getUserStatuses(
+    @Query() page: number,
+    @Query() order: string,
+    @Query() sort: string
+  ): Promise<Pagination> {
+    return await getUserStatuses(page, order, sort);
   }
 
   // TODO: maybe not needed
   /**
    * Get all reports that not classified yet, as an array, page by page.
-   * @param pageIndex Page index.
+   * @param page Page index.
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Security('ADMIN')
   @Get('statuses/unclassified')
   public async getUnclassifiedUserStatuses(
-    @Query() pageIndex: number = 0
+    @Query() page: number,
+    @Query() order: string,
+    @Query() sort: string
   ): Promise<Pagination> {
-    return await getUserStatuses(pageIndex, true);
+    return await getUserStatuses(page, order, sort, true);
   }
 
   /**
