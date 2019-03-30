@@ -126,8 +126,9 @@ export class UserStatusesController extends Controller {
   public async updateUser(
     platform: Platform,
     userId: string,
-    @Body() userUpdate: UserUpdate
+    @Body() userUpdate: UserUpdate,
+    @Request() request: express.Request
   ): Promise<void> {
-    await updateUserStatus(platform, userId, userUpdate.setStatus);
+    await updateUserStatus(request.user, platform, userId, userUpdate.setStatus);
   }
 }

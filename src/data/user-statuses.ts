@@ -1,8 +1,9 @@
 import { In, Not, getConnection, FindOperator, Equal, Any } from 'typeorm';
 
 import { UserStatusMap, Platform, Status, ObjectKeyMap } from '../core';
-import { UserStatus, Pagination } from '../models';
+import { UserStatus, Pagination, ActivityLog } from '../models';
 import { PAGINATION_ITEMS_PER_PAGE } from '../core/config';
+import { saveActivity } from './activity-log';
 
 /** Get detection status for reported users only. */
 export const getUserStatusOnlyMap = async (
@@ -100,7 +101,18 @@ export const getSpecificUserStatuses = async (
 };
 
 /** Update user status */
-export const updateUserStatus = async (platform: Platform, userId: string, status: Status) => {
+export const updateUserStatus = async (
+  analyst: string,
+  platform: Platform,
+  userId: string,
+  status: Status
+) => {
   const botRepository = getConnection().getRepository(UserStatus);
   await botRepository.update({ userId, platform, status: Not(Status.DUPLICATE) }, { status });
+  await saveActivity({
+    analyzedBy: analyst,
+    userPlatform: platform,
+    userId,
+    action: status
+  } as ActivityLog);
 };

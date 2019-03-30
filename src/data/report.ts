@@ -1,7 +1,8 @@
 import { getConnection } from 'typeorm';
 
 import { Status } from '../core';
-import { UserStatus } from '../models';
+import { UserStatus, ActivityLog } from '../models';
+import { saveActivity } from './activity-log';
 
 /**
  * Save a new report.
@@ -50,4 +51,10 @@ export const createNewReport = async (report: UserStatus, reporterKey: string) =
   const userStatus = new UserStatus({ ...report, status, reporterKey });
 
   await userStatusRepository.save(userStatus);
+  await saveActivity({
+    reportedBy: reporterKey,
+    userPlatform: platform,
+    userId,
+    action: status
+  } as ActivityLog);
 };
