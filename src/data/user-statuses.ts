@@ -1,6 +1,6 @@
-import { In, Not, getConnection } from 'typeorm';
+import { In, Not, getConnection, FindOperator, Equal, Any } from 'typeorm';
 
-import { UserStatusMap, Platform, Status } from '../core';
+import { UserStatusMap, Platform, Status, ObjectKeyMap } from '../core';
 import { UserStatus, Pagination } from '../models';
 import { PAGINATION_ITEMS_PER_PAGE } from '../core/config';
 
@@ -52,17 +52,26 @@ export const getUserStatuses = async (
   page: number = 0,
   order: string = 'reportedAt',
   sort: string = 'ASC',
+  filters: ObjectKeyMap = {},
   showUnclassified?: boolean
 ): Promise<Pagination> => {
+  const where: ObjectKeyMap<FindOperator<any>> = {
+    status: showUnclassified ? In([Status.REPORTED, Status.IN_PROCESS]) : Not(Status.DUPLICATE)
+  };
+
+  if (filters) {
+    for (const field in filters) {
+      if (filters.hasOwnProperty(field) && filters[field]) {
+        where[field] = Equal(filters[field]);
+      }
+    }
+  }
+
   const botRepository = getConnection().getRepository(UserStatus);
   const [items, total] = await botRepository.findAndCount({
     take: PAGINATION_ITEMS_PER_PAGE,
     skip: page * PAGINATION_ITEMS_PER_PAGE,
-    where: {
-      status: showUnclassified
-        ? In([Status.REPORTED, Status.IN_PROCESS])
-        : Not(Status.DUPLICATE)
-    },
+    where,
     order: {
       [order]: sort.toUpperCase()
     }

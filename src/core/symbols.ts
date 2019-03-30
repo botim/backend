@@ -1,3 +1,7 @@
+export interface ObjectKeyMap<T = string> {
+  [key: string]: T;
+}
+
 export enum Platform {
   TWITTER = 'TWITTER',
   FACEBOOK = 'FACEBOOK',

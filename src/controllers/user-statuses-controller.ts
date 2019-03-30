@@ -4,6 +4,7 @@ import {
   Query,
   Get,
   Post,
+  Request,
   Response,
   Route,
   Security,
@@ -11,6 +12,7 @@ import {
   Header,
   Put
 } from 'tsoa';
+import * as express from 'express';
 
 import {
   getUserStatusMap,
@@ -89,26 +91,13 @@ export class UserStatusesController extends Controller {
   public async getUserStatuses(
     @Query() page: number,
     @Query() order: string,
-    @Query() sort: string
+    @Query() sort: string,
+    // TODO: use typings for filters, tsoa shows an error
+    @Request() request: express.Request
   ): Promise<Pagination> {
-    return await getUserStatuses(page, order, sort);
-  }
+    const { status, platform } = request.query;
 
-  // TODO: maybe not needed
-  /**
-   * Get all reports that not classified yet, as an array, page by page.
-   * @param page Page index.
-   */
-  @Response(501, 'Server error')
-  @Response(401, 'Authentication fail')
-  @Security('ADMIN')
-  @Get('statuses/unclassified')
-  public async getUnclassifiedUserStatuses(
-    @Query() page: number,
-    @Query() order: string,
-    @Query() sort: string
-  ): Promise<Pagination> {
-    return await getUserStatuses(page, order, sort, true);
+    return await getUserStatuses(page, order, sort, { status, platform });
   }
 
   /**
