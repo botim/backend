@@ -51,7 +51,7 @@ export const getUserStatusMap = async (
 export const getUserStatuses = async (
   page: number = 0,
   order: string = 'reportedAt',
-  sort: string = 'ASC',
+  sort: 'ASC' | 'DESC' = 'ASC',
   filters: ObjectKeyMap = {},
   showUnclassified?: boolean
 ): Promise<Pagination> => {
@@ -73,7 +73,7 @@ export const getUserStatuses = async (
     skip: page * PAGINATION_ITEMS_PER_PAGE,
     where,
     order: {
-      [order]: sort.toUpperCase()
+      [order]: sort
     }
   });
 

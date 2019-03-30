@@ -91,7 +91,7 @@ export class UserStatusesController extends Controller {
   public async getUserStatuses(
     @Query() page: number,
     @Query() order: string,
-    @Query() sort: string,
+    @Query() sort: 'ASC' | 'DESC',
     // TODO: use typings for filters, tsoa shows an error
     @Request() request: express.Request
   ): Promise<Pagination> {
