@@ -1,11 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Unique,
+  CreateDateColumn,
+  OneToMany
+} from 'typeorm';
 
 import { Platform, Status, Reason } from '../core';
+
+import { ActivityLog } from './activity-log.model';
 
 @Entity({ name: 'user_statuses' })
 @Unique(['platform', 'userId', 'postId', 'commentId', 'replyCommentId'])
 export class UserStatus {
-  @PrimaryGeneratedColumn() private id: number;
+  @PrimaryGeneratedColumn() public id?: number;
 
   @Column({ type: 'enum', enum: Platform, nullable: false })
   public platform: Platform;
@@ -41,6 +50,9 @@ export class UserStatus {
   @CreateDateColumn({ name: 'reported_at', nullable: false })
   // optional for the report route validations
   public reportedAt?: Date;
+
+  @OneToMany(() => ActivityLog, activityLog => activityLog.userStatus)
+  public activityLogs?: ActivityLog[];
 
   constructor(private userStatus?: Partial<UserStatus>) {
     if (userStatus) {

@@ -38,5 +38,6 @@
     "routesDir": "./src/routers",
     "middlewareTemplate": "./src/routers/express-routes-template.ts.tsoa",
     "authenticationModule": "./src/security/authentication.ts"
-  }
+  },
+  "ignore": ["**/node_modules/**"]
 }

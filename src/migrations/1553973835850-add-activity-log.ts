@@ -24,35 +24,27 @@ export class AddActivityLog1553973835850 implements MigrationInterface {
             generationStrategy: 'increment'
           },
           {
-            name: 'reported_by',
-            type: 'varchar',
-            length: '30',
+            name: 'user_status_id',
+            type: 'int',
             isNullable: true
           },
           {
-            name: 'analyzed_by',
-            type: 'varchar',
-            length: '30',
+            name: 'old_status',
+            type: getEnumName('status'),
             isNullable: true
           },
           {
-            name: 'user_platform',
-            type: getEnumName('platform'),
-            isNullable: false
-          },
-          {
-            name: 'user_id',
-            type: 'varchar',
-            length: '30',
-            isNullable: false
-          },
-          {
-            name: 'action',
+            name: 'new_status',
             type: getEnumName('status'),
             isNullable: false
           },
           {
-            name: 'timestamp',
+            name: 'admin_id',
+            type: 'int',
+            isNullable: true
+          },
+          {
+            name: 'created_at',
             type: 'timestamp',
             isNullable: false,
             default: 'now()'
@@ -60,15 +52,15 @@ export class AddActivityLog1553973835850 implements MigrationInterface {
         ],
         foreignKeys: [
           {
-            columnNames: ['reported_by'],
-            referencedColumnNames: ['reporter_key'],
-            referencedTableName: 'reporters',
+            columnNames: ['user_status_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'user_statuses',
             onDelete: 'NO ACTION'
           },
           {
-            columnNames: ['analyzed_by'],
-            referencedColumnNames: ['username'],
-            referencedTableName: 'users',
+            columnNames: ['admin_id'],
+            referencedColumnNames: ['id'],
+            referencedTableName: 'admins',
             onDelete: 'NO ACTION'
           }
         ]

@@ -1,28 +1,33 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from 'typeorm';
 
-import { Platform, Status, Reason } from '../core';
+import { Status } from '../core';
+import { Admin } from './admin.model';
+import { UserStatus } from './user-status.model';
 
 @Entity({ name: 'activity_log' })
 export class ActivityLog {
-  @PrimaryGeneratedColumn() private id: number;
+  @PrimaryGeneratedColumn() public id?: number;
 
-  @Column({ name: 'reported_by', type: 'varchar', length: 30, nullable: true })
-  public reportedBy?: string;
+  @Column({ name: 'user_status_id', type: 'int', nullable: true })
+  public userStatusId: number;
 
-  @Column({ name: 'analyzed_by', type: 'varchar', length: 30, nullable: true })
-  public analyzedBy?: string;
+  @ManyToOne(() => UserStatus, userStatus => userStatus.activityLogs)
+  public userStatus?: UserStatus;
 
-  @Column({ name: 'user_platform', type: 'enum', enum: Platform, nullable: false })
-  public userPlatform: Platform;
+  @Column({ name: 'old_status', type: 'enum', enum: Status, nullable: true })
+  public oldStatus: Status;
 
-  @Column({ name: 'user_id', type: 'varchar', length: 30, nullable: false })
-  public userId: string;
+  @Column({ name: 'new_status', type: 'enum', enum: Status, nullable: false })
+  public newStatus: Status;
 
-  @Column({ type: 'enum', enum: Status, nullable: false })
-  public action: Status;
+  @Column({ name: 'admin_id', type: 'int', nullable: true })
+  public adminId: number;
 
-  @CreateDateColumn({ nullable: false })
-  public timestamp: Date;
+  @ManyToOne(() => Admin, admin => admin.activityLogs)
+  public admin?: Admin;
+
+  @CreateDateColumn({ name: 'created_at', nullable: false })
+  public createdAt: Date;
 
   constructor(private activityLog?: Partial<ActivityLog>) {
     if (activityLog) {

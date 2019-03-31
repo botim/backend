@@ -51,10 +51,9 @@ export const createNewReport = async (report: UserStatus, reporterKey: string) =
   const userStatus = new UserStatus({ ...report, status, reporterKey });
 
   await userStatusRepository.save(userStatus);
+
   await saveActivity({
-    reportedBy: reporterKey,
-    userPlatform: platform,
-    userId,
-    action: status
-  } as ActivityLog);
+    userStatusId: userStatus.id,
+    newStatus: status
+  });
 };

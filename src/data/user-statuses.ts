@@ -109,10 +109,11 @@ export const updateUserStatus = async (
 ) => {
   const botRepository = getConnection().getRepository(UserStatus);
   await botRepository.update({ userId, platform, status: Not(Status.DUPLICATE) }, { status });
-  await saveActivity({
-    analyzedBy: analyst,
-    userPlatform: platform,
-    userId,
-    action: status
-  } as ActivityLog);
+
+  // await saveActivity({
+  //   userStatusId: userStatus.id,
+  //   oldStatus: userStatus.status,
+  //   newStatus: status,
+  //   adminId
+  // });
 };

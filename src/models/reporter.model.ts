@@ -5,7 +5,7 @@ import { Platform } from '../core';
 @Entity({ name: 'reporters' })
 export class Reporter {
   @PrimaryGeneratedColumn()
-  private id: number;
+  public id?: number;
 
   @Column({ type: 'enum', enum: Platform })
   public platform: Platform;
