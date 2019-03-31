@@ -25,7 +25,7 @@ export enum Status {
 export enum Scopes {
   REPORTER = 'REPORTER',
   ADMIN = 'ADMIN',
-  SUPER_USER = 'SUPER_USER'
+  SUPER_ADMIN = 'SUPER_ADMIN'
 }
 
 export interface UserStatusMap {
@@ -38,7 +38,7 @@ export interface LoginSchema {
 }
 
 export interface SignedInfo {
-  username: string;
+  adminId: number;
   scope: Scopes;
 }
 

@@ -1,20 +1,18 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-import { generateEnumQuery, getEnumName } from '../core';
-
-export class AddUsers1553571996673 implements MigrationInterface {
+export class AddAdmins1553571996673 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await this._createTables(queryRunner);
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable('users', true, true);
+    await queryRunner.dropTable('admins', true, true);
   }
 
   private async _createTables(queryRunner: QueryRunner) {
     await queryRunner.createTable(
       new Table({
-        name: 'users',
+        name: 'admins',
         columns: [
           {
             name: 'id',

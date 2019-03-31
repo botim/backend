@@ -21,7 +21,7 @@ export const expressAuthentication = async (request: express.Request, scopes: st
   if (scopes.indexOf(Scopes.REPORTER) !== -1) {
     const reporterKey = request.header(TOKEN_HEADER);
     if (await checkReporterKey(reporterKey)) {
-      return reporterKey;
+      return;
     }
   } else {
     const jwtToken = request.header(TOKEN_HEADER).replace(TOKEN_HEADER_PREFIX, '');
@@ -31,7 +31,7 @@ export const expressAuthentication = async (request: express.Request, scopes: st
 
     /** Allow access only if the scope of JWT match to one of the security scopes rule. */
     if (scopes.indexOf(signedInfo.scope) !== -1) {
-      return signedInfo.username;
+      return signedInfo.adminId;
     }
   }
 

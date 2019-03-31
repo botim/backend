@@ -23,7 +23,7 @@
         "name": "Authorization",
         "in": "header"
       },
-      "SUPER_USER": {
+      "SUPER_ADMIN": {
         "type": "apiKey",
         "name": "Authorization",
         "in": "header"
