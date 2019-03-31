@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn
+} from 'typeorm';
 
 import { Status } from '../core';
 import { Admin } from './admin.model';
@@ -12,6 +19,7 @@ export class ActivityLog {
   public userStatusId: number;
 
   @ManyToOne(() => UserStatus, userStatus => userStatus.activityLogs)
+  @JoinColumn({ name: 'user_status_id' })
   public userStatus?: UserStatus;
 
   @Column({ name: 'old_status', type: 'enum', enum: Status, nullable: true })
@@ -24,6 +32,7 @@ export class ActivityLog {
   public adminId: number;
 
   @ManyToOne(() => Admin, admin => admin.activityLogs)
+  @JoinColumn({ name: 'admin_id' })
   public admin?: Admin;
 
   @CreateDateColumn({ name: 'created_at', nullable: false })
