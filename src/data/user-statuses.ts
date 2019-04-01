@@ -51,7 +51,7 @@ export const getUserStatusMap = async (
 /** Get reports page. */
 export const getUserStatuses = async (
   page: number = 0,
-  order: string = 'reportedAt',
+  order: string = 'id',
   sort: 'ASC' | 'DESC' = 'ASC',
   filters: ObjectKeyMap = {},
   showUnclassified?: boolean
