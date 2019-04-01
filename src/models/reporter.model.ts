@@ -10,7 +10,7 @@ export class Reporter {
   @Column({ type: 'enum', enum: Platform })
   public platform: Platform;
 
-  @Column({ name: 'user_id', type: 'varchar', length: 30 })
+  @Column({ name: 'user_id', type: 'varchar', length: 255 })
   public userId: string;
 
   @Column({ name: 'reporter_key', type: 'varchar', length: 30, nullable: false })

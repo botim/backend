@@ -22,7 +22,7 @@ export class UserStatus {
   @Column({ name: 'user_id', type: 'varchar', length: 255, nullable: false })
   public userId: string;
 
-  @Column({ type: 'varchar', length: 30, nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   public username?: string;
 
   @Column({ name: 'post_id', type: 'varchar', length: 255, nullable: false })
