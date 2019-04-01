@@ -2,7 +2,7 @@ import { Body, Controller, Post, Response, Route, Tags } from 'tsoa';
 import * as jwt from 'jsonwebtoken';
 
 import { checkAccess } from '../data';
-import { LoginSchema, Scopes, SignedInfo } from '../core';
+import { LoginSchema, SignedInfo } from '../core';
 import { Admin } from '../models';
 
 export const jwtSecret = process.env.JWT_SECRET;
@@ -35,7 +35,7 @@ export class AuthController extends Controller {
     const token = jwt.sign(
       {
         adminId: admin.id,
-        scope: Scopes.ADMIN
+        scope: admin.scope
       } as SignedInfo,
       jwtSecret,
       { expiresIn: jwtExpiresIn }

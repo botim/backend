@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
 
 import { checkReporterKey } from '../data';
-import { logger, SignedInfo, Scopes } from '../core';
+import { logger, SignedInfo, Scope } from '../core';
 import { jwtSecret } from '../controllers/auth-controller';
 import { TOKEN_HEADER, TOKEN_HEADER_PREFIX } from '../core/config';
 
@@ -18,7 +18,7 @@ export const expressAuthentication = async (request: express.Request, scopes: st
   }
 
   /** Handle JWT tokens */
-  if (scopes.indexOf(Scopes.REPORTER) !== -1) {
+  if (scopes.indexOf(Scope.REPORTER) !== -1) {
     const reporterKey = request.header(TOKEN_HEADER);
     if (await checkReporterKey(reporterKey)) {
       return;

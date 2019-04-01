@@ -22,7 +22,7 @@ export enum Status {
   DUPLICATE = 'DUPLICATE'
 }
 
-export enum Scopes {
+export enum Scope {
   REPORTER = 'REPORTER',
   ADMIN = 'ADMIN',
   SUPER_ADMIN = 'SUPER_ADMIN'
@@ -39,7 +39,7 @@ export interface LoginSchema {
 
 export interface SignedInfo {
   adminId: number;
-  scope: Scopes;
+  scope: Scope;
 }
 
 export interface UserUpdate {

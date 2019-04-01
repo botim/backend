@@ -1,12 +1,22 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
+import { generateEnumQuery, getEnumName } from '../core';
+
 export class AddAdmins1553571996673 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
+    await this._createEnums(queryRunner);
     await this._createTables(queryRunner);
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.dropTable('admins', true, true);
+    await queryRunner.query(generateEnumQuery('drop', 'scope'));
+  }
+
+  private async _createEnums(queryRunner: QueryRunner) {
+    await queryRunner.query(
+      generateEnumQuery('create', 'scope', ['REPORTER', 'ADMIN', 'SUPER_ADMIN'])
+    );
   }
 
   private async _createTables(queryRunner: QueryRunner) {
@@ -40,6 +50,11 @@ export class AddAdmins1553571996673 implements MigrationInterface {
             length: '100',
             isNullable: false,
             isUnique: true
+          },
+          {
+            name: 'scope',
+            type: getEnumName('scope'),
+            isNullable: false
           }
         ]
       })
