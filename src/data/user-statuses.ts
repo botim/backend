@@ -102,18 +102,20 @@ export const getSpecificUserStatuses = async (
 
 /** Update user status */
 export const updateUserStatus = async (
-  analyst: string,
-  platform: Platform,
-  userId: string,
-  status: Status
-) => {
+  id: number,
+  status: Status,
+  adminId: number
+): Promise<UserStatus> => {
   const botRepository = getConnection().getRepository(UserStatus);
-  await botRepository.update({ userId, platform, status: Not(Status.DUPLICATE) }, { status });
+  const userStatus = await botRepository.findOne(id);
+  await botRepository.update(id, { status });
 
-  // await saveActivity({
-  //   userStatusId: userStatus.id,
-  //   oldStatus: userStatus.status,
-  //   newStatus: status,
-  //   adminId
-  // });
+  await saveActivity({
+    userStatusId: userStatus.id,
+    oldStatus: userStatus.status,
+    newStatus: status,
+    adminId
+  });
+
+  return userStatus;
 };

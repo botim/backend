@@ -21,7 +21,7 @@ import {
   getSpecificUserStatuses,
   updateUserStatus
 } from '../data';
-import { Platform, UserStatusMap, Cache, UserUpdate } from '../core';
+import { Platform, UserStatusMap, Cache, Status } from '../core';
 import { UserStatus, Pagination } from '../models';
 
 const usersCache = new Cache(
@@ -117,18 +117,17 @@ export class UserStatusesController extends Controller {
    * Set bot status.
    * @param platform Suspected bot platform.
    * @param userId Suspected bot id, to update status for.
-   * @param userUpdate The new status to set.
+   * @param status The new status to set.
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
   @Security('ADMIN')
-  @Put('statuses/{platform}/{userId}')
+  @Put('statuses/{id}')
   public async updateUser(
-    platform: Platform,
-    userId: string,
-    @Body() userUpdate: UserUpdate,
+    id: number,
+    @Body() { status }: { status: Status },
     @Request() request: express.Request
-  ): Promise<void> {
-    await updateUserStatus(request.user, platform, userId, userUpdate.setStatus);
+  ): Promise<UserStatus> {
+    return await updateUserStatus(id, status, request.user);
   }
 }
