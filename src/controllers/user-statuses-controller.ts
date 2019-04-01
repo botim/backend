@@ -86,6 +86,7 @@ export class UserStatusesController extends Controller {
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
+  @Security('SUPER_ADMIN')
   @Security('ADMIN')
   @Get('statuses')
   public async getUserStatuses(
@@ -107,6 +108,7 @@ export class UserStatusesController extends Controller {
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
+  @Security('SUPER_ADMIN')
   @Security('ADMIN')
   @Get('statuses/{platform}/{userId}')
   public async getUserReports(platform: Platform, userId: string): Promise<UserStatus[]> {
@@ -121,6 +123,7 @@ export class UserStatusesController extends Controller {
    */
   @Response(501, 'Server error')
   @Response(401, 'Authentication fail')
+  @Security('SUPER_ADMIN')
   @Security('ADMIN')
   @Put('statuses/{id}')
   public async updateUser(
