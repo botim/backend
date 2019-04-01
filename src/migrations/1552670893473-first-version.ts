@@ -89,7 +89,7 @@ export class FirstVersion1552670893473 implements MigrationInterface {
           {
             name: 'user_id',
             type: 'varchar',
-            length: '30',
+            length: '255',
             isNullable: false
           },
           {
@@ -101,19 +101,19 @@ export class FirstVersion1552670893473 implements MigrationInterface {
           {
             name: 'post_id',
             type: 'varchar',
-            length: '30',
+            length: '255',
             isNullable: false
           },
           {
             name: 'comment_id',
             type: 'varchar',
-            length: '30',
+            length: '255',
             isNullable: true
           },
           {
             name: 'reply_comment_id',
             type: 'varchar',
-            length: '30',
+            length: '255',
             isNullable: true
           },
           {
@@ -131,7 +131,7 @@ export class FirstVersion1552670893473 implements MigrationInterface {
           {
             name: 'description',
             type: 'varchar',
-            length: '200',
+            length: '255',
             isNullable: true
           },
           {
