@@ -38,6 +38,9 @@ export class ActivityLog {
   @CreateDateColumn({ name: 'created_at', nullable: false })
   public createdAt: Date;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  public comment?: string;
+
   constructor(private activityLog?: Partial<ActivityLog>) {
     if (activityLog) {
       Object.assign(this, activityLog);

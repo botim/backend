@@ -104,7 +104,8 @@ export const getSpecificUserStatuses = async (
 export const updateUserStatus = async (
   id: number,
   status: Status,
-  adminId: number
+  adminId: number,
+  comment: string
 ): Promise<UserStatus> => {
   const botRepository = getConnection().getRepository(UserStatus);
   const userStatus = await botRepository.findOne(id);
@@ -114,7 +115,8 @@ export const updateUserStatus = async (
     userStatusId: userStatus.id,
     oldStatus: userStatus.status,
     newStatus: status,
-    adminId
+    adminId,
+    comment
   });
 
   return userStatus;

@@ -21,7 +21,7 @@ import {
   getSpecificUserStatuses,
   updateUserStatus
 } from '../data';
-import { Platform, UserStatusMap, Cache, Status } from '../core';
+import { Platform, UserStatusMap, Cache, SetUserStatus } from '../core';
 import { UserStatus, Pagination } from '../models';
 
 const usersCache = new Cache(
@@ -128,9 +128,10 @@ export class UserStatusesController extends Controller {
   @Put('statuses/{id}')
   public async updateUser(
     id: number,
-    @Body() { status }: { status: Status },
+    @Body() setUserStatus: SetUserStatus,
     @Request() request: express.Request
   ): Promise<UserStatus> {
-    return await updateUserStatus(id, status, request.user);
+    const { status, comment } = setUserStatus;
+    return await updateUserStatus(id, status, request.user, comment);
   }
 }

@@ -54,6 +54,7 @@ export const createNewReport = async (report: UserStatus, reporterKey: string) =
 
   await saveActivity({
     userStatusId: userStatus.id,
-    newStatus: status
+    newStatus: status,
+    comment: userStatus.description
   });
 };
